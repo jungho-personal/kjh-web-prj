@@ -1,0 +1,203 @@
+1) 개발환경 세팅 - 형상관리 편
+
+제목 : PC 에서 개인+회사 Github 계정 완전 분리하기
+
+(SSH 기반 멀티 계정 Git 설정 정리)
+개인 PC 와 회사 PC의 경계가 모호해지면 이런 상황을 자주 맞이하게 된다.
+	- 회사 프로젝트는 회사 GitHub 계정으로 관리해야 하고
+	- 개인 포트폴리오나 사이드 프로젝트는 개인 GitHub 계정으로 관리하고 싶은데
+	- 개인 PC 와 회사 PC 의 경계가 모호해지면서 결국 설정들이 짬뽕되는 순간...
+
+처음에는 “그냥 되겠지” 하고 쓰다가 어느 순간 잘못된 계정으로 push 하거나, 403 에러, 권한 문제, 토큰 충돌을 겪게 된다.
+
+이 글은 내가 실제로 겪은 문제와 해결 과정을 정리한 글이다.
+	왜 SSH 방식이 정답에 가까운지,
+	왜 계정을 ‘리포지토리 단위’로 분리해야 하는지를 중심으로 설명한다.
+
+1. 문제의 본질: Git은 "계정"이 아니라 "remote"를 본다
+많이 오해하는 부분이 있다.
+	"VS Code 에서 어떤 GitHub 계정으로 로그인했는지"
+	"브라우저에서 어떤 GitHub 계정을 쓰는지"
+사실 이건 Git 인증과 거의 관계가 없다.
+
+Git에서 실제로 중요한 건 딱 하나. "이 Repository가 어디를 가리키고 있냐"
+즉, 개인/회사 구분은 Github 계정이 아니라 remote URL 이 결정한다고 볼 수 있다.
+VS Code GUI도 결국 내부적으로 git push를 호출할 뿐..
+
+2. 왜 HTTPS 방식은 멀티 계정에 불리한가
+HTTPS 방식은 사실 편하다.(이 설정하기 전까지 이렇게 사용했으니..)
+그러나 멀티 계정 환경에서는 문제가 생긴다.
+
+HTTPS 방식의 구조
+	- Windows / MacOS에는 Credential Manager (자격 증명 관리자) 가 존재한다.
+		(windows 기준: "제어판/모든 제어판 항목/사용자 계정/자격 증명 관리" 에 접속한 뒤 windows 자격 증명을 눌러서 확인 해보면 https://git.. 이 보인다.)
+	- https://github.com 에 대해 하나의 토큰을 저장한다.
+	- 여러 계정을 쓰게 되면 마지막에 인증한 계정이 덮어쓴다.
+
+실제로 겪은 문제
+	- 개인 프로젝트를 push 했는데, 회사 계정으로 인증되어서 403 에러
+
+// HTTPS는 PC 단위 인증, 결국 나는 repository 단위 분리가 필요했다.
+
+3. 그래서 SSH + 키 분리가 정답이다.
+SSH 방식의 핵심은 이것이다.
+	"어떤 키를 쓰느냐" = "어떤 계정으로 인증하느냐"
+
+이 두가지를 매핑하기 위해서 PC에 개인 키 / 회사 키를 물리적으로 분리했다.
+
+~/.ssh/
+ ├─ id_ed25519_personal   # 개인 GitHub 계정용
+ ├─ id_ed25519_company    # 회사 GitHub 계정용
+ └─ config                # host 별 키 매핑
+
+4. SSH config로 "계정 라우팅" 만들기
+~/.ssh/config 파일에 다음과 같이 설정했다.
+
+Host github.com-personal
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519_personal
+  IdentitiesOnly yes
+
+Host github.com-company
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519_company
+  IdentitiesOnly yes
+
+이 config 의 의미는
+	git@github.com-personal: --> 개인 키 사용
+	git@github.com-company: --> 회사 키 사용
+
+즉 Github를 사용하지만, 인증 경로를 분리한 것이다.
+
+
+5. Repository 단위로 계정이 결정되는 구조
+이제 모든 것은 git remote -v 한 줄로 설명이 가능하다.
+repository 루트에 가서 위 명령어를 입력하면
+
+개인 프로젝트
+	origin  git@github.com-personal:jungho-personal/kjh-web-prj.git (fetch)
+	origin  git@github.com-personal:jungho-personal/kjh-web-prj.git (push)
+
+회사 프로젝트 (https 설정을 안바꿨다면..)
+	origin  https://github.com/won-suk-heo/DW_VCK_DB_Script.git (fetch)
+	origin  https://github.com/won-suk-heo/DW_VCK_DB_Script.git (push)
+
+회사 프로젝트
+	origin  git@github.com-company:won-suk-heo/RENAULT_CRM.git (fetch)
+	origin  git@github.com-company:won-suk-heo/RENAULT_CRM.git (push)
+
+같은 PC, 같은 VS Code, 같은 Git 하지만 repo마다 인증 계정은 완전히 다르다.
+
+6. VS Code GUI는 바뀌지 않는다.
+많이 걱정했던 부분이 이거였다.
+	"그럼 이제 VS Code에서 commit / push 방식이 바뀌는 거 아니야?"
+결론은 아니다.
+	VS Code Source Control
+	Commit 버튼
+	Push 버튼
+전부 내부적으로는 git commit, git push 호출, remote 설정만 따라간다
+
+개인 repo → 개인 계정
+회사 repo → 회사 계정
+	VS Code는 아무 생각도 안 한다 (좋은 의미로).
+
+7. 이 방식을 선택한 이유 요약
+정리하면, 이 구조를 선택한 이유는 명확하다.
+	계정 충돌이 구조적으로 불가능
+	repo 단위로 인증 주체가 명확
+	회사 PC에서도 개인 프로젝트 안전
+	VS Code / CLI 모두 동일하게 동작
+	실무에서도 쓰는 정석 패턴
+
+한 줄 요약하면: "Git은 계정을 기억하지 않는다. 우리는 remote로 계정을 설계해야 한다."
+
+
+8. 마무리
+이번 설정은 단순한 Git 팁이 아니라, "도구를 어떻게 구조적으로 이해하고 쓰느냐" 에 대한 경험이었다.
+앞으로 회사 프로젝트와 개인 프로젝트를 병행하더라도 이 구조 덕분에 실수할 이유가 사라졌다.
+나중에 또 PC를 바꾸거나, 다른 회사 환경에서도 그대로 재사용할 수 있다는 점도 큰 장점이다.
+
+9. 기타
+# SSH 생성을 위한 .ssh 확인
+dir $env:USERPROFILE\.ssh
+
+# 없으면 생성
+mkdir $env:USERPROFILE\.ssh
+
+# 개인
+ssh-keygen -t ed25519 -C "personal-github" -f ~/.ssh/id_ed25519_personal
+
+# 회사
+ssh-keygen -t ed25519 -C "company-github" -f ~/.ssh/id_ed25519_company
+
+# ~/.ssh/cofig SSH config 생성
+
+# config 파일 내용
+Host github.com-personal
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519_personal
+  IdentitiesOnly yes
+
+Host github.com-company
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519_company
+  IdentitiesOnly yes
+
+# 개인 GitHub
+type ~/.ssh/id_ed25519_personal.pub
+
+# 회사 GitHub
+type ~/.ssh/id_ed25519_company.pub
+
+# GitHub Setting 에서 ssh 키 등록
+GitHub --> Settings --> SSH and GPG keys --> New SSH Key 
+(ssh-ed25519 AAA... personal-github)
+
+# SSH 인증 테스트
+ssh -T git@github.com-personal
+
+# 프로젝트 remote 변경
+git remote set-url origin git@github.com-personal:<personal-id>/<repo>.git
+
+2) Railway 배포용 Docker file?
+Dockerfile : "이 앱을 어떻게 실행할지 적어둔 설명서"
+
+Railway의 기본 사고 : 
+	"코드는 있는데..
+		*) 어떤 언어지?
+		*) 의존성은 뭐지?
+		*) 어떻게 실행하지?
+
+그래서 Railway는 보통 이렇게 실행
+	* Dockerfile이 있으면 --> 그대로 믿고 빌드
+	* 없으면 --> 자동 추론(근데 잘 꼬임)
+
+Dockerfile이 실제로 하는 일(개념)
+	1. 어떤 OS / python 버전 사용할지
+	2. requirements.txt 설치
+	3. FastAPI 서버 실행
+
+	즉 : 
+		이 프로젝트는 python이고
+		FastAPI 앱은 app.main:app 이고
+		포트는 8000이야
+
+	를 railway에게 알려주는 역할
+
+3) railway.toml 이란?
+railway.toml = Railway 전용 설정 파일
+	"이 프로젝트는 Railway에서 이렇게 다뤄줘"
+라고 알려주는 메타 정보
+
+주로 설정하는 것
+	* 서비스 이름
+	* 헬스체크 경로
+	* 필드 방식
+	* 포트 (중요)
+예를 들면 Railway의 "이 컨테이너가 살아 있는지 어떻게 확인해?" 질문을 railway.toml 에 적어주는 것
+
+Health Check 하는 이유 : PaaS 는 항상 앱이 살았나 죽었나를 감시 그래서 일정 주기마다 HTTP 요청을 보냄
