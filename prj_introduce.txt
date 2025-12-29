@@ -1,0 +1,47 @@
+project 시작 이유 : 네이버 웹툰 이직로그 보고서.. 나도 해볼래... 우리 회사에 조이나 에스더는 없지만 하다보면 언젠가는 생기겠지
+
+Project Name : Personal & Development Blog and Portfolio (kjh-web-prj)
+
+Implement Goals
+	- Development log + Blog log
+	- LLM Web Service
+	- Make an Online Personal Webpage to use cloud service (e.g. AWS, GCP, Render, Railway..)
+	
+Tech Stack
+	- Language
+		* python
+		* Javascript
+	- Framework
+		* React
+		* FastAPI
+	- DB
+		* PostgreSQL
+		* PGVector (Postgre extension)
+	- OS
+		* tbd
+	- Tools
+		* VSCode	- code editor
+		* DBeaver	- db editor
+		* GPT		- ai helper
+		* Gemini	- ai helper
+		* docker	- deploy tool & use db image
+		* git		- Version Control
+		
+서버는 한곳에서 통합하여 운영 (front / back 나누지 않음)
+-> 개인 프로젝트이며, 규모가 크지 않기 때문에 관리 포인트를 줄이고자 한 서버에서 운영. project dir 에서 폴더를 분기하여 설계
+
+서버 호스팅은 railway로
+-> PaaS 라서 배포가 비교적 간편함
+-> 내가 원하는 tool, service 모두 구현 가능
+-> server sleep 이 없음(render를 고르지 않은 이유 중 1)
+-> DB 유지보수 (render를 고르지 않은 이유 중 2 -> render 는 90일 뒤 db가 삭제...)
+-> 현 프로젝트에 사용할 python, docker.. 를 편하게 사용 가능
+	(gcp 나 aws 선택안한 이유 나중에 후술 -> 보안, 네트워크, ssl 인증 등 현재 개인 프로젝트에서 직적 하나하나 구현은 too much라고 생각)
+	(같은 PaaS 중에 render 를 선택하지 않은 이유.. 처음엔 git push, commit에 배포가 되어서 이걸 하려고 했지만,, 결국 1번과 2번 문제로 인해)
+	
+	
+💡 포트폴리오용 한 줄 정리 (나중에 쓰기 좋음)
+
+“React와 FastAPI를 단일 서비스로 통합 배포하여
+운영 복잡도를 최소화했고, Railway를 활용해
+API·정적 웹·PostgreSQL을 하나의 프로젝트로 관리했습니다.”
