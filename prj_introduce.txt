@@ -133,6 +133,7 @@ kjh-web-prj/
 
 아래 작성하는 건 프로젝트 진척도야. 우리 대화할 때 프로젝트 진행 척도나 순서 등에 대해서 이야기할 때 이 내용을 참고해서 대답해야 해.
 20251229: fastapi + docker + railway 로 개인 서비스 배포 완료
+20251230: Railway PostgreSQL 연동 및 운영 DB 테이블 자동 생성, Blog/Dev Log API 실데이터 CRUD 검증 완료, React SPA 라우팅 및 Static 서빙 이슈 해결
 
 
 
