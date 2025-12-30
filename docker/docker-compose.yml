@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: kjh_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kjhdb
+      POSTGRES_USER: kjh
+      POSTGRES_PASSWORD: kjh_pw_1234
+      TZ: Asia/Seoul
+    ports:
+      - "5432:5432"
+    volumes:
+      - kjh_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kjh -d kjhdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  kjh_pg_data:
