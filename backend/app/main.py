@@ -5,6 +5,9 @@ from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from app.db.session import engine
+from app.models.base import Base
+
 from app.api.health import router as health_router
 
 load_dotenv()
@@ -74,3 +77,8 @@ def spa_fallback(path: str, request: Request):
     # 그 외( /, /blog, /blog/slug 등)는 모두 index.html 반환
     index = STATIC_DIR / "index.html"
     return FileResponse(str(index))
+
+@app.on_event("startup")
+def on_startup():
+    # 🚀 배포 환경에서 최초 1회 테이블 생성
+    Base.metadata.create_all(bind=engine)
