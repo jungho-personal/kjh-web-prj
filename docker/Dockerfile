@@ -1,20 +1,30 @@
+### 1) frontend build stage
+FROM node:20-alpine AS frontend-build
+WORKDIR /app/frontend
+
+COPY frontend/package.json frontend/package-lock.json* ./
+RUN npm ci
+
+COPY frontend ./
+RUN npm run build
+# 결과: /app/frontend/dist
+
+### 2) backend stage
 FROM python:3.11-slim
 
-# Python 로그가 바로 찍히도록
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# 의존성 먼저 복사/설치 (캐시 효율)
 COPY backend/requirements.txt /app/backend/requirements.txt
 RUN pip install --no-cache-dir -r /app/backend/requirements.txt
 
-# 소스 복사
 COPY backend /app/backend
 
-# Railway/컨테이너는 보통 PORT 환경변수로 포트를 내려줌
-# uvicorn은 --port에 이를 넣어야 함
-EXPOSE 8000
+# ✅ 빌드 산출물을 backend/static으로 확실히 넣는다
+RUN rm -rf /app/backend/static
+COPY --from=frontend-build /app/frontend/dist /app/backend/static
 
+EXPOSE 8000
 CMD ["sh", "-c", "cd /app/backend && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
