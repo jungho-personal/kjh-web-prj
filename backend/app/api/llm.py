@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from app.schemas.llm import ChatRequest, ChatResponse, Usage
 
-router = APIRouter(prefix="/api/llm", tags=["llm"])
+router = APIRouter(prefix="/llm", tags=["llm"])
 
 
 @router.post("/chat", response_model=ChatResponse)

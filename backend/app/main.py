@@ -1,14 +1,19 @@
 import os
-from dotenv import load_dotenv
 from pathlib import Path
+from dotenv import load_dotenv
+
 from fastapi import FastAPI, Request
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.db.session import engine
 from app.models.base import Base
 
 from app.api.health import router as health_router
+from app.api.blog import router as blog_router
+from app.api.auth import router as auth_router
+from app.api.admin import router as admin_router
+from app.api.llm import router as llm_router
 
 load_dotenv()
 
@@ -23,62 +28,43 @@ def create_app() -> FastAPI:
         redoc_url="/redoc",
     )
 
-    # routers
-    app.include_router(health_router)
+    # ✅ API prefix 통일 (프론트 proxy "/api"와 일치)
+    app.include_router(health_router, prefix="/api")
+    app.include_router(blog_router, prefix="/api")
+    app.include_router(auth_router, prefix="/api")
+    app.include_router(admin_router, prefix="/api")
+    app.include_router(llm_router, prefix="/api")
 
-    @app.get("/")
-    def root():
+    @app.get("/api")
+    def api_root():
         return {"app": app_name, "env": env}
+
+    # --- SPA Static serving (React/Vite build) ---
+    BASE_DIR = Path(__file__).resolve().parent.parent  # backend/app -> backend
+    STATIC_DIR = BASE_DIR / "static"
+    ASSETS_DIR = STATIC_DIR / "assets"
+
+    if ASSETS_DIR.exists():
+        app.mount("/assets", StaticFiles(directory=str(ASSETS_DIR)), name="assets")
+
+    # favicon/robots 등 정적 파일 직접 반환 + SPA fallback
+    @app.get("/{path:path}")
+    def spa_fallback(path: str, request: Request):
+        # ✅ API는 절대 SPA fallback으로 보내면 안 됨 (404로 떨어져야 정상)
+        if path.startswith("api"):
+            return JSONResponse({"detail": "Not Found"}, status_code=404)
+
+        file_path = STATIC_DIR / path
+        if file_path.is_file():
+            return FileResponse(str(file_path))
+
+        index = STATIC_DIR / "index.html"
+        return FileResponse(str(index))
+
+    @app.on_event("startup")
+    def on_startup():
+        Base.metadata.create_all(bind=engine)
 
     return app
 
 app = create_app()
-
-# 라우터 include 추가
-from fastapi import FastAPI
-
-from app.api.health import router as health_router
-from app.api.blog import router as blog_router
-from app.api.auth import router as auth_router
-from app.api.admin import router as admin_router
-from app.api.llm import router as llm_router
-
-app = FastAPI()
-
-app.include_router(health_router)
-app.include_router(blog_router)
-app.include_router(auth_router)
-app.include_router(admin_router)
-app.include_router(llm_router)
-
-# --- SPA Static serving (React/Vite build) ---
-BASE_DIR = Path(__file__).resolve().parent.parent  # backend/app -> backend
-STATIC_DIR = BASE_DIR / "static"
-
-# Vite 빌드 산출물: static/assets/*
-ASSETS_DIR = STATIC_DIR / "assets"
-
-if ASSETS_DIR.exists():
-    app.mount("/assets", StaticFiles(directory=str(ASSETS_DIR)), name="assets")
-
-# favicon 등 루트 정적 파일 대응 (있으면)
-# 예: /favicon.ico, /robots.txt 등
-@app.get("/{path:path}")
-def spa_fallback(path: str, request: Request):
-    # ✅ API는 여기서 처리하면 안 됨
-    if path.startswith("api"):
-        return FileResponse(str(STATIC_DIR / "index.html"))  # (실수 방지용) 실제론 여기 도달 안 하는 게 정상
-
-    # 실제 파일 요청이면 그 파일 반환 (favicon, manifest 등)
-    file_path = STATIC_DIR / path
-    if file_path.is_file():
-        return FileResponse(str(file_path))
-
-    # 그 외( /, /blog, /blog/slug 등)는 모두 index.html 반환
-    index = STATIC_DIR / "index.html"
-    return FileResponse(str(index))
-
-@app.on_event("startup")
-def on_startup():
-    # 🚀 배포 환경에서 최초 1회 테이블 생성
-    Base.metadata.create_all(bind=engine)

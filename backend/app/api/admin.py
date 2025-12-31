@@ -11,7 +11,7 @@ from app.services.blog_service import create_post, update_post
 from sqlalchemy.exc import IntegrityError
 
 
-router = APIRouter(prefix="/api/admin", tags=["admin"])
+router = APIRouter(prefix="/admin", tags=["admin"])
 
 
 @router.post("/posts", response_model=PostDetail)

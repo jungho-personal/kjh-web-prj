@@ -1,25 +1,37 @@
 import os
 import time
 import jwt
+from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 
-from app.schemas.auth import LoginRequest, LoginResponse
+load_dotenv()
 
-router = APIRouter(prefix="/api/auth", tags=["auth"])
+router = APIRouter(tags=["auth"])
 
-JWT_SECRET = os.getenv("JWT_SECRET", "dev-secret")
-JWT_ALG = os.getenv("JWT_ALG", "HS256")
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")  # 로컬용. 배포에서는 반드시 환경변수!
+class LoginRequest(BaseModel):
+    username: str
+    password: str
 
-
-@router.post("/login", response_model=LoginResponse)
+@router.post("/login")
 def login(req: LoginRequest):
-    if req.username != ADMIN_USERNAME or req.password != ADMIN_PASSWORD:
+    admin_user = os.getenv("ADMIN_USERNAME", "")
+    admin_pass = os.getenv("ADMIN_PASSWORD", "")
+    jwt_secret = os.getenv("JWT_SECRET", "")
+    jwt_alg = os.getenv("JWT_ALG", "HS256")
+
+    if not jwt_secret:
+        raise HTTPException(status_code=500, detail="JWT_SECRET not configured")
+
+    if req.username != admin_user or req.password != admin_pass:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     now = int(time.time())
     exp = now + 3600
-    token = jwt.encode({"sub": req.username, "role": "admin", "iat": now, "exp": exp}, JWT_SECRET, algorithm=JWT_ALG)
-
+    token = jwt.encode(
+        {"sub": req.username, "role": "admin", "iat": now, "exp": exp},
+        jwt_secret,
+        algorithm=jwt_alg,
+    )
+    print("ENV ADMIN_USERNAME:", os.getenv("ADMIN_USERNAME"))
     return {"access_token": token, "token_type": "bearer", "expires_in": 3600}

@@ -8,7 +8,7 @@ from app.db.session import get_db
 from app.schemas.post import PostListResponse, PostDetail
 from app.services.blog_service import list_posts, get_post_by_slug
 
-router = APIRouter(prefix="/api/posts", tags=["posts"])
+router = APIRouter(prefix="/posts", tags=["posts"])
 
 
 @router.get("", response_model=PostListResponse)
