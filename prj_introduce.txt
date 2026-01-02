@@ -192,6 +192,7 @@ frontend/src/
 20251229: fastapi + docker + railway 로 개인 서비스 배포 완료
 20251230: Railway PostgreSQL 연동 및 운영 DB 테이블 자동 생성, Blog/Dev Log API 실데이터 CRUD 검증 완료, React SPA 라우팅 및 Static 서빙 이슈 해결
 20251231: Admin Markdown Editor 구현, JWT 기반 관리자 로그인 및 글 생성 API 연동 완료, Docker 멀티 스테이지 빌드 적용으로 프론트/백엔드 통합 배포 성공
+20260102: Admin Editor 배포 이슈 해결(라우팅/캐시/커밋), Railway 환경에서 Authorization 헤더 누락 문제 분석 후 X-Admin-Token 기반 관리자 인증 적용, 운영 환경에서 Admin 글 등록 정상화 완료
 
 
 아래 """~~~""" 안에 작성된 내용은 dev_log 템플릿이야.

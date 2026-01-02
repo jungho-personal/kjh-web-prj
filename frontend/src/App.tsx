@@ -14,9 +14,7 @@ import DevLogDetail from "@/pages/DevLogDetail";
 export default function App() {
   return (
     <Routes>
-      {/* ✅ AppShell을 루트 path로 명시 */}
       <Route path="/" element={<AppShell />}>
-        {/* ✅ index 라우트 사용 */}
         <Route index element={<Home />} />
 
         <Route path="blog" element={<Blog />} />
@@ -28,12 +26,14 @@ export default function App() {
         <Route path="dev-log" element={<DevLog />} />
         <Route path="dev-log/:slug" element={<DevLogDetail />} />
 
-        {/* ✅ Admin (둘 다 열어두기) */}
-        {/* <Route path="admin/editor" element={<AdminEditor />} /> */}
+        {/* Admin */}
         <Route path="admin/login" element={<AdminLogin />} />
-        <Route path="__admin__/editor" element={<AdminEditor />} />
 
-        {/* ✅ NotFound fallback */}
+        {/* create */}
+        <Route path="__admin__/editor" element={<AdminEditor />} />
+        {/* edit (detail -> editor 진입) */}
+        <Route path="__admin__/editor/:section/:slug" element={<AdminEditor />} />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

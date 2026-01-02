@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "@/api/auth";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,18 +15,26 @@ export default function AdminLogin() {
   const onSubmit = async () => {
     try {
       setLoading(true);
-      const res = await login(username, password);
-      localStorage.setItem("ACCESS_TOKEN", res.access_token);
-      navigate("/admin/editor");
+
+      const res = await fetch("/api/auth/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!res.ok) throw new Error(await res.text());
+
+      navigate("/__admin__/editor", { replace: true });
     } catch (e: any) {
-      alert(e.message ?? "Login failed");
+      alert(e?.message ?? "Login failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Admin Login</CardTitle>

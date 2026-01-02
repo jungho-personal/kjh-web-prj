@@ -53,6 +53,12 @@ def get_post_by_slug(db: Session, slug: str) -> Optional[Post]:
     return db.execute(stmt).scalars().first()
 
 
+# ✅ admin edit 로드용 (slug 충돌 방지 위해 category 포함)
+def get_post_by_slug_and_category(db: Session, slug: str, category: str) -> Optional[Post]:
+    stmt = select(Post).where(Post.slug == slug, Post.category == category)
+    return db.execute(stmt).scalars().first()
+
+
 def create_post(db: Session, data: dict) -> Post:
     post = Post(
         slug=data["slug"],
@@ -71,15 +77,34 @@ def create_post(db: Session, data: dict) -> Post:
     return post
 
 
+# ✅ created_at 불변 보장을 위한 화이트리스트
+EDITABLE_FIELDS = {
+    "slug",        # 프론트에서는 edit 시 잠그는 걸 추천 (링크 깨짐 방지)
+    "title",
+    "summary",
+    "category",
+    "tags",
+    "published",
+    "content_md",
+}
+
+
 def update_post(db: Session, post_id: int, updates: dict) -> Optional[Post]:
     post = db.get(Post, post_id)
     if not post:
         return None
 
     for k, v in updates.items():
+        if k not in EDITABLE_FIELDS:
+            continue
+        if v is None:
+            continue
+        # 문자열 필드에 빈값 들어오면 덮지 않기 (원치 않는 wipe 방지)
+        if isinstance(v, str) and v.strip() == "":
+            continue
+
         setattr(post, k, v)
 
-    post.updated_at = datetime.utcnow()
     db.commit()
     db.refresh(post)
     return post
