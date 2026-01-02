@@ -1,4 +1,5 @@
 // frontend/src/pages/AdminEditor.tsx
+// 뭐노 이거 와이라노
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
