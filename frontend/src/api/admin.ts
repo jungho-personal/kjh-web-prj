@@ -66,6 +66,7 @@ export async function createAdminPostWithBasicAuth(
     headers: {
       "Content-Type": "application/json",
       Authorization: buildBasicAuthHeader(adminUser, adminPass),
+      "X-Admin-Token": btoa(`${adminUser}:${adminPass}`),        // ✅ Railway 대비용
     },
     body: JSON.stringify(body),
   });
