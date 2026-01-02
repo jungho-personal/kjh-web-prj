@@ -24,6 +24,7 @@ export default function App() {
         <Route path="/portfolio/:slug" element={<PortfolioDetail />} />
         <Route path="/dev-log" element={<DevLog />} />
         <Route path="/dev-log/:slug" element={<DevLogDetail />} />
+        <Route path="/__admin__/editor" element={<AdminEditor />} />
       </Route>
     </Routes>
   );
