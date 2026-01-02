@@ -130,12 +130,68 @@ kjh-web-prj/
 │  └─ dev_log
 └─ railway.toml
 
+
+프론트엔드 스타일과 구조에 대해서 대답할 때 업로드 된 20260102_web_page초안.pdf 파일과 아래 내용 """ """블럭으로 감싼 부분들을 참고하여 대답해
+"""
++) 프론트엔드 구조 가이드 (공통 인식용 20260102_v1)
+frontend/src/
+├─ components/
+│  ├─ layout/
+│  │  ├─ AppShell.tsx        # Sidebar + TopNav + Content
+│  │  └─ Sidebar.tsx
+│  │
+│  ├─ sidebar/
+│  │  └─ ProfileCard.tsx
+│  │
+│  └─ ui/                    # shadcn/ui
+│
+├─ pages/
+│  ├─ Home.tsx
+│  ├─ Blog.tsx
+│  ├─ BlogDetail.tsx
+│  ├─ Portfolio.tsx
+│  ├─ PortfolioDetail.tsx
+│  ├─ Playground.tsx
+│  └─ Resume.tsx             # 구현 방식 미정
+
+
+🧱 UI 아키텍처 기본 원칙 (이 프로젝트 공통 규칙)
+	Layout
+		AppShell 구조
+		Sidebar (고정)
+		Top Navigation
+		Main Content
+
+	Width 규칙
+		글 중심 콘텐츠 (Blog Detail): max-w-3xl
+		리스트 / 대시보드 / 포트폴리오: max-w-6xl
+
+	컴포넌트 스타일
+		Card: rounded-2xl, border, shadow-sm
+		버튼/폼: shadcn/ui 기본 스타일 사용
+		색상: neutral 기반 + 포인트 컬러 1개
+
+📌 UI/UX Design Guideline (kjh-web-prj)
+	The project uses Tailwind CSS + shadcn/ui
+	Layout is fixed left sidebar + scrollable right content
+	Sidebar is always visible on desktop
+	Mobile will use drawer navigation (not implemented yet)
+	Top navigation and sidebar buttons both exist and may point to the same endpoints
+	Blog and Portfolio list items navigate to detail pages
+	Resume page exists but implementation type is undecided
+	Light/Dark theme toggle is supported
+	Use an AppShell layout pattern across all pages
+	Content width rules:
+		Reading pages (blog detail): max-w-3xl
+		List/dashboard pages: max-w-6xl
+"""
+
 개발 환경 OS 는 Window 11 기반이야.
 
 아래 작성하는 건 프로젝트 진척도야. 우리 대화할 때 프로젝트 진행 척도나 순서 등에 대해서 이야기할 때 이 내용을 참고해서 대답해야 해.
 20251229: fastapi + docker + railway 로 개인 서비스 배포 완료
 20251230: Railway PostgreSQL 연동 및 운영 DB 테이블 자동 생성, Blog/Dev Log API 실데이터 CRUD 검증 완료, React SPA 라우팅 및 Static 서빙 이슈 해결
-
+20251231: Admin Markdown Editor 구현, JWT 기반 관리자 로그인 및 글 생성 API 연동 완료, Docker 멀티 스테이지 빌드 적용으로 프론트/백엔드 통합 배포 성공
 
 
 아래 """~~~""" 안에 작성된 내용은 dev_log 템플릿이야.

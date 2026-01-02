@@ -1,26 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
-import Blog from "./pages/Blog";
-import BlogDetail from "./pages/BlogDetail";
-import Home from "./pages/Home";
+import App from "./App";
 import "./index.css";
-import AdminEditor from "@/pages/AdminEditor";
-import AdminLogin from "@/pages/AdminLogin";
+
+// 👉 테마 토글까지 같이 쓸 경우 (이미 만들어둔 경우)
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-	<BrowserRouter>
-	  <Routes>
-		<Route path="/" element={<Home />} />
-		<Route path="/blog" element={<Blog />} />
-		<Route path="/blog/:slug" element={<BlogDetail />} />
-		<Route path="/admin/editor" element={<AdminEditor />} />
-		<Route path="/admin/login" element={<AdminLogin />} />
-		{/* TODO: 나중에 Home/Portfolio/Playground 추가 */}
-	  </Routes>
-	</BrowserRouter>
+    {/* ThemeProvider는 선택 사항 – 다음 단계에서 붙여도 됨 */}
+    <ThemeProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ThemeProvider>
   </React.StrictMode>
 );
-

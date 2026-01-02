@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
+@plugin "@tailwindcss/typography";
 @custom-variant dark (&:is(.dark *));
 
 /* 기본 리셋(선택) */
@@ -124,10 +124,38 @@ body {
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+  .prose :where(pre) {
+    border-radius: 1rem;
+    padding: 1rem;
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--muted));
   }
-  body {
-    @apply bg-background text-foreground;
+
+  .prose :where(code) {
+    border-radius: 0.5rem;
+    padding: 0.15rem 0.35rem;
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--muted));
+  }
+
+  .prose :where(code)::before,
+  .prose :where(code)::after {
+    content: "";
+  }
+
+  .prose :where(a) {
+    text-decoration: none;
+  }
+  .prose :where(a:hover) {
+    text-decoration: underline;
+  }
+
+  .prose :where(blockquote) {
+    font-style: normal;
+    border-left-color: hsl(var(--border));
+  }
+
+  .prose :where(table) {
+    width: 100%;
   }
 }
