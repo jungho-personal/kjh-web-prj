@@ -1,24 +1,20 @@
-import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import TopNav from "./TopNav";
+import { Outlet } from "react-router-dom";
 
 export default function AppShell() {
   return (
     <div className="h-screen overflow-hidden bg-background text-foreground">
-      {/* TopNav */}
-      <TopNav />
-
-      {/* Body */}
-      <div className="flex h-[calc(100vh-56px)]">
-        {/* Left sidebar (fixed on desktop) */}
+      <div className="flex h-full">
+        {/* Left sidebar */}
         <Sidebar />
 
         {/* Right content (scrollable) */}
-        <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto max-w-6xl px-4 py-8">
+        <div className="flex-1 overflow-y-auto">
+          {/* ✅ 여기서 “전체 폭을 Sidebar 다음부터 꽉” 쓰게 만든다 */}
+          <div className="w-full">
             <Outlet />
           </div>
-        </main>
+        </div>
       </div>
     </div>
   );

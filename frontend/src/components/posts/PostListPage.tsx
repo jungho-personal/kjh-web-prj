@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { listPosts } from "@/api/client";
 import type { PostBase } from "@/api/types";
+import { Content } from "@/components/layout/Content";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 type Category = "blog" | "portfolio" | "dev_log";
 
@@ -66,51 +68,48 @@ export default function PostListPage({
   if (err) return <div className="text-destructive">Error: {err}</div>;
 
   return (
-    <div className="space-y-8">
-      <header>
-        <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
-        {description ? (
-          <p className="mt-2 text-sm text-muted-foreground">{description}</p>
-        ) : null}
-      </header>
+    <Content variant="wide">
+      <div className="mb-8 space-y-2">
+        <PageHeader title={title} description={description} />
 
-      {sorted.length === 0 ? (
-        <div className="rounded-2xl border p-6 text-sm text-muted-foreground">
-          {emptyText}
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {sorted.map((p) => (
-            <Link
-              key={p.id}
-              to={`${basePath}/${p.slug}`}
-              className="block rounded-2xl border p-5 transition hover:bg-accent/30"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <h2 className="text-lg font-semibold leading-snug">{p.title}</h2>
-                <time className="text-xs text-muted-foreground whitespace-nowrap">
-                  {renderDate(p.created_at)}
-                </time>
-              </div>
-
-              <p className="mt-2 text-sm text-muted-foreground">{p.summary}</p>
-
-              {p.tags?.length ? (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {p.tags.map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground"
-                    >
-                      #{t}
-                    </span>
-                  ))}
+        {sorted.length === 0 ? (
+          <div className="rounded-2xl border p-6 text-sm text-muted-foreground">
+            {emptyText}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {sorted.map((p) => (
+              <Link
+                key={p.id}
+                to={`${basePath}/${p.slug}`}
+                className="block rounded-2xl border p-5 transition hover:bg-accent/30"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <h2 className="text-lg font-semibold leading-snug">{p.title}</h2>
+                  <time className="text-xs text-muted-foreground whitespace-nowrap">
+                    {renderDate(p.created_at)}
+                  </time>
                 </div>
-              ) : null}
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
+    
+                <p className="mt-2 text-sm text-muted-foreground">{p.summary}</p>
+    
+                {p.tags?.length ? (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {p.tags.map((t) => (
+                      <span
+                        key={t}
+                        className="rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground"
+                      >
+                        #{t}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </Content>
   );
 }

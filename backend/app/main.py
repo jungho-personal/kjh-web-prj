@@ -43,6 +43,24 @@ def create_app() -> FastAPI:
     BASE_DIR = Path(__file__).resolve().parent.parent  # backend/app -> backend
     STATIC_DIR = BASE_DIR / "static"
     ASSETS_DIR = STATIC_DIR / "assets"
+    ASSET_PDF = Path(__file__).resolve().parent / "assets" / "resume.pdf"  # backend/app/assets/resume.pdf
+
+    @app.get("/resume.pdf")
+    def serve_resume_pdf_inline():
+        # ✅ inline: iframe/브라우저 보기용 (filename 빼는 게 포인트)
+        return FileResponse(
+            path=str(ASSET_PDF),
+            media_type="application/pdf",
+        )
+    
+    @app.get("/resume-download.pdf")
+    def serve_resume_pdf_download():
+        # ✅ attachment: 다운로드용
+        return FileResponse(
+            path=str(ASSET_PDF),
+            media_type="application/pdf",
+            filename="resume.pdf",
+        )
 
     if ASSETS_DIR.exists():
         app.mount("/assets", StaticFiles(directory=str(ASSETS_DIR)), name="assets")

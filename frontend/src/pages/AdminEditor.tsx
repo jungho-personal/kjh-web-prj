@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { Content } from "@/components/layout/Content";
 
 import {
   adminMe,
@@ -245,19 +246,21 @@ export default function AdminEditor() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-6">
+    <Content variant="wide" className="py-6">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div className="space-y-1">
           <h1 className="text-xl font-semibold">{isEdit ? "Edit Post" : "New Post"}</h1>
           <p className="text-sm text-muted-foreground">
-            {isEdit ? "기존 글을 수정합니다. created_at은 유지되고 updated_at만 갱신됩니다." : "새 글을 작성합니다."}
+            {isEdit
+              ? "기존 글을 수정합니다. created_at은 유지되고 updated_at만 갱신됩니다."
+              : "새 글을 작성합니다."}
           </p>
         </div>
         <Button onClick={onSave} disabled={saving}>
           {saving ? "Saving..." : "Save"}
         </Button>
       </div>
-
+  
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card className="min-h-[520px]">
           <CardHeader>
@@ -265,7 +268,7 @@ export default function AdminEditor() {
           </CardHeader>
           <CardContent className="space-y-4">
             <Separator />
-
+  
             <div className="space-y-2">
               <Label>Category</Label>
               <div className="flex flex-wrap gap-2">
@@ -282,17 +285,17 @@ export default function AdminEditor() {
                 ))}
               </div>
             </div>
-
+  
             <div className="space-y-2">
               <Label>Title</Label>
               <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="제목" />
             </div>
-
+  
             <div className="space-y-2">
               <Label>Summary</Label>
               <Input value={summary} onChange={(e) => setSummary(e.target.value)} placeholder="요약" />
             </div>
-
+  
             <div className="space-y-2">
               <Label>Slug</Label>
               <Input
@@ -305,10 +308,14 @@ export default function AdminEditor() {
                 <p className="text-xs text-muted-foreground">Edit 모드에서는 slug 변경을 기본적으로 막습니다.</p>
               )}
             </div>
-
+  
             <div className="space-y-2">
               <Label>Tags (comma separated)</Label>
-              <Input value={tagsRaw} onChange={(e) => setTagsRaw(e.target.value)} placeholder="FastAPI, Railway, ..." />
+              <Input
+                value={tagsRaw}
+                onChange={(e) => setTagsRaw(e.target.value)}
+                placeholder="FastAPI, Railway, ..."
+              />
               <div className="flex flex-wrap gap-2">
                 {tags.map((t) => (
                   <Badge key={t} variant="secondary">
@@ -317,7 +324,7 @@ export default function AdminEditor() {
                 ))}
               </div>
             </div>
-
+  
             <div className="flex items-center justify-between rounded-xl border p-3">
               <div className="space-y-1">
                 <div className="font-medium">Published</div>
@@ -325,7 +332,7 @@ export default function AdminEditor() {
               </div>
               <Switch checked={published} onCheckedChange={setPublished} />
             </div>
-
+  
             <div className="space-y-2">
               <Label>Content (Markdown)</Label>
               <Textarea
@@ -337,7 +344,7 @@ export default function AdminEditor() {
             </div>
           </CardContent>
         </Card>
-
+  
         <Card className="min-h-[520px]">
           <CardHeader>
             <CardTitle>Preview</CardTitle>
@@ -347,6 +354,6 @@ export default function AdminEditor() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </Content>
   );
 }
