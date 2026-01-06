@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { PostCard } from "@/components/posts/PostCard";
 import type { PostCardItem } from "@/components/posts/PostCard";
 import { Link } from "react-router-dom";
+import focusingImg from "@/assets/hero/focusing.jpg";
 import {
   Database,
   Server,
@@ -77,10 +78,12 @@ export default function Home() {
             </strong>
             합니다.
           </p>
-          <p className="text-sm text-muted-foreground max-w-xl">
-            데이터 파이프라인, CRM/DW, FastAPI 기반 백엔드,
-            그리고 LLM을 활용한 실무형 서비스에 관심이 많습니다.
-          </p>
+          <div className="space-y-1 text-sm text-muted-foreground leading-relaxed">
+            <p>데이터 웨어하우스와 CRM 환경에서 ETL, 데이터 마트, 대시보드를 설계해온 데이터 엔지니어입니다.</p>
+            <p>Oracle, MSSQL, Salesforce를 기반으로 안정적인 데이터 파이프라인을 구축해왔습니다.</p>
+            <p>최근에는 LLM과 AI Agent를 활용해 자연어 기반 분석·자동화 POC를 주도하고 있습니다.</p>
+            <p>단순한 기술 적용을 넘어, 실제 업무 생산성을 높이는 구조를 만드는 것에 집중합니다.</p>
+          </div>
 
           <div className="flex flex-wrap gap-3 pt-2">
             <Link to="/portfolio">
@@ -92,26 +95,27 @@ export default function Home() {
           </div>
         </div>
 
-        <Card className="rounded-2xl shadow-sm">
-          <CardContent className="p-6 space-y-3">
-            <div className="text-sm text-muted-foreground">
-              Currently focusing on
-            </div>
-            <ul className="space-y-2 text-sm">
-              <li>• FastAPI + React 통합 서비스</li>
-              <li>• PostgreSQL / DW / ETL</li>
-              <li>• LLM 기반 내부 도구 & Playground</li>
-            </ul>
-          </CardContent>
-        </Card>
+        {/* Right Image Area */}
+        <div className="flex items-start justify-center lg:justify-end">
+          <div className="w-full max-w-md h-[300px] sm:h-[320px] lg:h-[340px] rounded-xl overflow-hidden">
+            <img
+              src={focusingImg}
+              alt="Currently focusing on"
+              className="w-full h-full object-cover shadow-sm"
+            />
+          </div>
+        </div>
       </section>
-      <hr className="border-muted" />
+      <hr className="border-t border-border/70" />
 
       {/* =========================
           2) WHAT I DO
       ========================= */}
       <section className="space-y-6">
-        <h2 className="text-xl font-semibold">What I Do</h2>
+        <h2 className="flex items-center gap-3 text-2xl font-bold">
+          <span className="h-7 w-1 rounded-full bg-primary" />
+          What I do
+        </h2>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <SkillCard
@@ -152,7 +156,10 @@ export default function Home() {
       ========================= */}
       <section className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Featured Projects</h2>
+          <h2 className="flex items-center gap-3 text-2xl font-bold">
+            <span className="h-7 w-1 rounded-full bg-primary" />
+            Featured Projects
+          </h2>
           <Link to="/portfolio">
             <Button variant="ghost" size="sm">
               View all →
@@ -186,7 +193,10 @@ export default function Home() {
       <section className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-semibold">Latest Blog</h2>
+          <h2 className="flex items-center gap-3 text-2xl font-bold">
+            <span className="h-7 w-1 rounded-full bg-primary" />
+            Latest Blog
+          </h2>
             <span className="text-xs text-muted-foreground">· updates</span>
           </div>
           <Link to="/blog">
@@ -213,7 +223,10 @@ export default function Home() {
       <section className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-semibold">Latest Dev Log</h2>
+          <h2 className="flex items-center gap-3 text-2xl font-bold">
+            <span className="h-7 w-1 rounded-full bg-primary" />
+            Latest Dev Log
+          </h2>
             <span className="text-xs text-muted-foreground">· work log</span>
           </div>
           <Link to="/dev-log">

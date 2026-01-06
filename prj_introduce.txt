@@ -41,150 +41,8 @@ Tech Stack
 이 내용을 바탕으로 개인 프로젝트를 진행할거야. 
 이 내용을 기반으로 대답을 해야 하고, 더 나은 방향이 보이면 제안해야해.
 
-아래 내용은 파일 디렉토리야.
-우리 프로젝트의 디렉토리이니 대답할 때 이 디렉토리를 참고해야해.
-프로젝트 진행도에 따라 아래 디렉토리는 바뀔 수 있어. 코드 작성 및 파일 생성, 폴더 생성 시에 해당 내용을 고려하여 대답해야해.
-kjh-web-prj/
-├─ .git/
-├─ .gitignore
-├─ README.md
-
-├─ docker/
-│  ├─ Dockerfile
-│  └─ docker-compose.yml        # (local dev용)
-
-├─ backend/
-│  ├─ app/
-│  │  ├─ main.py                # FastAPI entrypoint
-│  │  ├─ config.py              # env, settings
-│  │  ├─ dependencies.py
-│  │  │
-│  │  ├─ api/                   # API router layer
-│  │  │  ├─ __init__.py
-│  │  │  ├─ health.py
-│  │  │  ├─ auth.py
-│  │  │  ├─ blog.py
-│  │  │  ├─ portfolio.py
-│  │  │  └─ llm.py               # GPT/Gemini API
-│  │  │
-│  │  ├─ core/                  # 핵심 비즈니스 로직
-│  │  │  ├─ security.py
-│  │  │  ├─ llm_client.py
-│  │  │  └─ vector_store.py
-│  │  │
-│  │  ├─ models/                # SQLAlchemy models
-│  │  │  ├─ base.py
-│  │  │  ├─ user.py
-│  │  │  ├─ post.py
-│  │  │  └─ embedding.py
-│  │  │
-│  │  ├─ schemas/               # Pydantic schemas
-│  │  │  ├─ user.py
-│  │  │  ├─ post.py
-│  │  │  └─ llm.py
-│  │  │
-│  │  ├─ db/
-│  │  │  ├─ session.py
-│  │  │  ├─ base.py
-│  │  │  └─ init_db.py
-│  │  │
-│  │  ├─ services/              # 서비스 레이어
-│  │  │  ├─ blog_service.py
-│  │  │  ├─ portfolio_service.py
-│  │  │  └─ llm_service.py
-│  │  │
-│  │  └─ utils/
-│  │     ├─ logger.py
-│  │     └─ time.py
-│  │
-│  ├─ tests/
-│  └─ requirements.txt
-│
-├─ frontend/
-│  ├─ public/
-│  ├─ src/
-│  │  ├─ pages/
-│  │  │  ├─ Home.tsx
-│  │  │  ├─ Blog.tsx
-│  │  │  ├─ Portfolio.tsx
-│  │  │  └─ Playground.tsx       # LLM 서비스 UI
-│  │  │
-│  │  ├─ components/
-│  │  ├─ api/
-│  │  │  └─ client.ts
-│  │  ├─ styles/
-│  │  └─ main.tsx
-│  │
-│  ├─ package.json
-│  └─ vite.config.ts
-│
-├─ static/                       # React build output (배포 시)
-│
-├─ scripts/
-│  ├─ init_db.sh
-│  └─ migrate.sh
-│
-├─ .env
-├─ blog
-│  ├─ dev_blog
-│  └─ dev_log
-└─ railway.toml
-
-
-프론트엔드 스타일과 구조에 대해서 대답할 때 업로드 된 20260102_web_page초안.pdf 파일과 아래 내용 """ """블럭으로 감싼 부분들을 참고하여 대답해
-"""
-+) 프론트엔드 구조 가이드 (공통 인식용 20260102_v1)
-frontend/src/
-├─ components/
-│  ├─ layout/
-│  │  ├─ AppShell.tsx        # Sidebar + TopNav + Content
-│  │  └─ Sidebar.tsx
-│  │
-│  ├─ sidebar/
-│  │  └─ ProfileCard.tsx
-│  │
-│  └─ ui/                    # shadcn/ui
-│
-├─ pages/
-│  ├─ Home.tsx
-│  ├─ Blog.tsx
-│  ├─ BlogDetail.tsx
-│  ├─ Portfolio.tsx
-│  ├─ PortfolioDetail.tsx
-│  ├─ Playground.tsx
-│  └─ Resume.tsx             # 구현 방식 미정
-
-
-🧱 UI 아키텍처 기본 원칙 (이 프로젝트 공통 규칙)
-	Layout
-		AppShell 구조
-		Sidebar (고정)
-		Top Navigation
-		Main Content
-
-	Width 규칙
-		글 중심 콘텐츠 (Blog Detail): max-w-3xl
-		리스트 / 대시보드 / 포트폴리오: max-w-6xl
-
-	컴포넌트 스타일
-		Card: rounded-2xl, border, shadow-sm
-		버튼/폼: shadcn/ui 기본 스타일 사용
-		색상: neutral 기반 + 포인트 컬러 1개
-
-📌 UI/UX Design Guideline (kjh-web-prj)
-	The project uses Tailwind CSS + shadcn/ui
-	Layout is fixed left sidebar + scrollable right content
-	Sidebar is always visible on desktop
-	Mobile will use drawer navigation (not implemented yet)
-	Top navigation and sidebar buttons both exist and may point to the same endpoints
-	Blog and Portfolio list items navigate to detail pages
-	Resume page exists but implementation type is undecided
-	Light/Dark theme toggle is supported
-	Use an AppShell layout pattern across all pages
-	Content width rules:
-		Reading pages (blog detail): max-w-3xl
-		List/dashboard pages: max-w-6xl
-"""
+이 주소는 이 프로젝트의 git hub 주소야. 항상 대화할 때 이 git hub에 등록된 프로젝트 기반으로 대답을 해야해.
+https://github.com/jungho-personal/kjh-web-prj
 
 개발 환경 OS 는 Window 11 기반이야.
 
@@ -194,6 +52,8 @@ frontend/src/
 20251231: Admin Markdown Editor 구현, JWT 기반 관리자 로그인 및 글 생성 API 연동 완료, Docker 멀티 스테이지 빌드 적용으로 프론트/백엔드 통합 배포 성공
 20260102: Admin Editor 배포 이슈 해결(라우팅/캐시/커밋), Railway 환경에서 Authorization 헤더 누락 문제 분석 후 X-Admin-Token 기반 관리자 인증 적용, 운영 환경에서 Admin 글 등록 정상화 완료
 20260102_v2: Admin 인증 구조 개편 및 글 수정 기능 안정화 / admin 인증 간편화(env에 등록해서 비교. JWT사용안함)
+20260105: Sidebar 기반 SPA 레이아웃으로 구조 리팩토링, Content 영역의 max-width/padding 설계 문제를 해결하여 페이지별 여백·정렬 기준을 명확히 정리
+
 
 아래 """~~~""" 안에 작성된 내용은 dev_log 템플릿이야.
 내가 "오늘 작업 로그 남기자" 같은 작업 로그 남기는 내용과 관련된 말을 하면, 우리가 작업한 내용을 아래 템플릿에 맞춰서 작성해야해.
