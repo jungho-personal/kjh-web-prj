@@ -14,7 +14,7 @@ export function Content({
   // ✅ wide는 더 넓게 (그림 느낌)
   const widthClass =
     variant === "reading"
-      ? "max-w-3xl"
+      ? "max-w-6xl"
       : "max-w-none";
   
   return (

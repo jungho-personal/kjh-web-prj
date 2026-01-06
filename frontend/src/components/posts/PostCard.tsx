@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
 export type PostCardItem = {
-  id: number;
+  id: string | number;
   title: string;
   slug: string;
   summary?: string;

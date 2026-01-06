@@ -53,6 +53,7 @@ https://github.com/jungho-personal/kjh-web-prj
 20260102: Admin Editor 배포 이슈 해결(라우팅/캐시/커밋), Railway 환경에서 Authorization 헤더 누락 문제 분석 후 X-Admin-Token 기반 관리자 인증 적용, 운영 환경에서 Admin 글 등록 정상화 완료
 20260102_v2: Admin 인증 구조 개편 및 글 수정 기능 안정화 / admin 인증 간편화(env에 등록해서 비교. JWT사용안함)
 20260105: Sidebar 기반 SPA 레이아웃으로 구조 리팩토링, Content 영역의 max-width/padding 설계 문제를 해결하여 페이지별 여백·정렬 기준을 명확히 정리
+20260106: Home UI 테마 v1 확정(Indigo 기반), Sidebar/Navigation UX 정리, Hero 및 섹션 구분 개선 후 프론트엔드 빌드·배포 안정화 완료
 
 
 아래 """~~~""" 안에 작성된 내용은 dev_log 템플릿이야.

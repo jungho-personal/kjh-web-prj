@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { listPosts } from "@/api/client";
 import type { PostBase } from "@/api/types";
 import { Content } from "@/components/layout/Content";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { PaginationNumbers } from "@/components/common/PaginationNumbers";
+
 
 type Category = "blog" | "portfolio" | "dev_log";
 
@@ -13,10 +15,34 @@ type Props = {
   category: Category;
   basePath: "/blog" | "/portfolio" | "/dev-log";
 
-  // ✅ 추가 옵션
   sort?: "created_desc" | "created_asc";
   dateFormat?: (iso: string) => string;
 };
+
+const PAGE_SIZE = 5;
+
+function getPageFromSearch(search: string) {
+  const sp = new URLSearchParams(search);
+  const p = Number(sp.get("page") ?? "1");
+  return Number.isFinite(p) && p > 0 ? p : 1;
+}
+
+function setPageToSearch(search: string, page: number) {
+  const sp = new URLSearchParams(search);
+  sp.set("page", String(page));
+  return `?${sp.toString()}`;
+}
+
+function LoadingOverlay({ show }: { show: boolean }) {
+  if (!show) return null;
+  return (
+    <div className="fixed inset-0 z-50 grid place-items-center bg-black/40">
+      <div className="rounded-2xl bg-background/80 border px-6 py-4 backdrop-blur">
+        <p className="text-sm text-muted-foreground">Loading...</p>
+      </div>
+    </div>
+  );
+}
 
 export default function PostListPage({
   title,
@@ -26,6 +52,11 @@ export default function PostListPage({
   sort = "created_desc",
   dateFormat,
 }: Props) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const page = useMemo(() => getPageFromSearch(location.search), [location.search]);
+
   const [items, setItems] = useState<PostBase[]>([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
@@ -35,6 +66,9 @@ export default function PostListPage({
       try {
         setLoading(true);
         setErr(null);
+
+        // ✅ 일단은 전체를 가져오고(50), 프론트에서 페이지네이션
+        // 나중에 서버 페이지네이션 지원하면 { page, page_size: PAGE_SIZE } 로 교체
         const res = await listPosts({ category, limit: 50 });
         setItems(res.items);
       } catch (e: any) {
@@ -61,54 +95,84 @@ export default function PostListPage({
     return arr;
   }, [items, sort]);
 
+  const totalPages = useMemo(() => {
+    return Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
+  }, [sorted.length]);
+
+  const currentPage = useMemo(() => {
+    // page가 범위 밖이면 clamp
+    return Math.min(Math.max(page, 1), totalPages);
+  }, [page, totalPages]);
+
+  const paged = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return sorted.slice(start, start + PAGE_SIZE);
+  }, [sorted, currentPage]);
+
   const renderDate = (iso: string) =>
     dateFormat ? dateFormat(iso) : new Date(iso).toLocaleDateString();
 
-  if (loading) return <div>Loading...</div>;
+  const goPage = (p: number) => {
+    navigate({ search: setPageToSearch(location.search, p) });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   if (err) return <div className="text-destructive">Error: {err}</div>;
 
   return (
     <Content variant="wide">
-      <div className="mb-8 space-y-2">
+      <LoadingOverlay show={loading} />
+  
+      <div className="mb-8 space-y-6">
         <PageHeader title={title} description={description} />
-
-        {sorted.length === 0 ? (
+  
+        {!loading && sorted.length === 0 ? (
           <div className="rounded-2xl border p-6 text-sm text-muted-foreground">
             {emptyText}
           </div>
-        ) : (
-          <div className="space-y-4">
-            {sorted.map((p) => (
-              <Link
-                key={p.id}
-                to={`${basePath}/${p.slug}`}
-                className="block rounded-2xl border p-5 transition hover:bg-accent/30"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <h2 className="text-lg font-semibold leading-snug">{p.title}</h2>
-                  <time className="text-xs text-muted-foreground whitespace-nowrap">
-                    {renderDate(p.created_at)}
-                  </time>
-                </div>
-    
-                <p className="mt-2 text-sm text-muted-foreground">{p.summary}</p>
-    
-                {p.tags?.length ? (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {p.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground"
-                      >
-                        #{t}
-                      </span>
-                    ))}
+        ) : null}
+  
+        {!loading && sorted.length > 0 ? (
+          <div className="space-y-6">
+            <div className="divide-y border-y">
+              {paged.map((p) => (
+                <Link
+                  key={p.id}
+                  to={`${basePath}/${p.slug}`}
+                  className="block py-5 transition hover:bg-accent/20"
+                >
+                  <div className="flex items-start justify-between gap-6">
+                    <div className="min-w-0 space-y-2">
+                      <h2 className="text-lg font-semibold leading-snug">{p.title}</h2>
+  
+                      {p.summary ? (
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {p.summary}
+                        </p>
+                      ) : null}
+  
+                      {p.tags?.length ? (
+                        <div className="flex flex-wrap gap-2 pt-1">
+                          {p.tags.map((t) => (
+                            <span key={t} className="text-xs text-muted-foreground">
+                              #{t}
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+  
+                    <time className="shrink-0 text-xs text-muted-foreground whitespace-nowrap pt-1">
+                      {renderDate(p.created_at)}
+                    </time>
                   </div>
-                ) : null}
-              </Link>
-            ))}
+                </Link>
+              ))}
+            </div>
+  
+            <PaginationNumbers page={currentPage} totalPages={totalPages} onChange={goPage} />
           </div>
-        )}
+        ) : null}
       </div>
     </Content>
   );
