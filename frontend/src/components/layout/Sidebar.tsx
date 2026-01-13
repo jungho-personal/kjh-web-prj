@@ -11,7 +11,7 @@ const NAV_ITEMS = [
   { to: "/blog", label: "Blog" },
   { to: "/dev-log", label: "Dev Log" },
   { to: "/playground", label: "Playground" },
-  { to: "/resume", label: "Resume" },
+//   { to: "/resume", label: "Resume" },
 ];
 
 export default function Sidebar() {

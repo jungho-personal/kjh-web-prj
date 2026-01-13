@@ -37,7 +37,7 @@ const resume = {
     {
       period: "2023.08 ~ 2025.12",
       title: "CRM DW 운영 & 유지보수",
-      meta: "Site > Volvo / Renault",
+      meta: "Site > Volvo",
       slug: "v-company-dw",
     },
     {

@@ -1,3 +1,4 @@
+// frontend/src/App.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import AppShell from "@/components/layout/AppShell";
 
@@ -17,7 +18,6 @@ export default function App() {
   return (
     <Routes>
       {/* AppShell 밖 */}
-	  {/* Admin */}
       <Route path="admin/login" element={<AdminLogin />} />
 
       {/* AppShell 안 */}
@@ -33,14 +33,13 @@ export default function App() {
         <Route path="dev-log" element={<DevLog />} />
         <Route path="dev-log/:slug" element={<DevLogDetail />} />
 
-		<Route path="/resume" element={<Resume />} />
+        {/* Resume는 Sidebar에서만 숨기고 라우팅은 유지 */}
+        <Route path="resume" element={<Resume />} />
 
-        <Route path="/playground" element={<Playground />} />
-        <Route path="/portfolio/:slug" element={<PortfolioDetail />} />
+        <Route path="playground" element={<Playground />} />
 
-        {/* create */}
+        {/* create/edit */}
         <Route path="__admin__/editor" element={<AdminEditor />} />
-        {/* edit (detail -> editor 진입) */}
         <Route path="__admin__/editor/:section/:slug" element={<AdminEditor />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
