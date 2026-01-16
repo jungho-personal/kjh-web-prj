@@ -38,19 +38,19 @@ const resume = {
       period: "2023.08 ~ 2025.12",
       title: "CRM DW 운영 & 유지보수",
       meta: "Site > Volvo",
-      slug: "v-company-dw",
+      slug: "volvo-crm-dw-ops",
     },
     {
       period: "2025.02 ~ 2025.08",
       title: "CRM DW 구축 & 운영",
       meta: "Site > Renault",
-      slug: "r-company-dw",
+      slug: "renault-crm-dw-build-ops",
     },
     {
       period: "2024.02 ~ 2024.10",
       title: "CRM DW 연계 문자발송시스템\n및 개인정보동의 대시보드 개발",
       meta: "Site > Volvo",
-      slug: "dw-ops-improve",
+      slug: "volvo-crm-dw-msg-consent-dashboard",
     },
     {
       period: "2023.05 ~ 2023.08",
@@ -61,7 +61,7 @@ const resume = {
       period: "2022.11 ~ 2023.05",
       title: "TreasureData (SaaS) 운영",
       meta: "Site > LG 전자 한국영업본부",
-      slug: "treasuredata-ops",
+      slug: "lg-td-cdp-ops",
     },
   ] as LineItem[],
 };

@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import ImageModal from "@/components/common/ImageModal";
 import { useParams, Link } from "react-router-dom";
 
 import { Content } from "@/components/layout/Content";
@@ -18,6 +19,8 @@ export default function PortfolioDetail() {
   const { slug } = useParams<{ slug: string }>();
 
   const data = useMemo(() => (slug ? getPortfolioDetail(slug) : undefined), [slug]);
+  
+  const [selected, setSelected] = useState<null | { src: string; alt?: string; caption?: string }>(null);
 
   if (!data) {
     return (
@@ -213,12 +216,19 @@ export default function PortfolioDetail() {
               
                     return (
                       <figure key={`${m.filename}-${i}`} className="space-y-2">
-                        <img
-                          src={src}
-                          alt={m.alt ?? m.filename}
-                          className="w-full max-h-[520px] object-contain"
-                          loading="lazy"
-                        />
+                        <button
+                          type="button"
+                          className="group w-full text-left"
+                          onClick={() => setSelected({ src, alt: m.alt ?? m.filename, caption: m.caption })}
+                        >
+                          <img
+                            src={src}
+                            alt={m.alt ?? m.filename}
+                            className="w-full max-h-[520px] object-contain cursor-zoom-in"
+                            loading="lazy"
+                            draggable={false}
+                          />
+                        </button>
                         {m.caption ? (
                           <figcaption className="text-xs text-muted-foreground text-center">
                             {m.caption}
@@ -240,6 +250,13 @@ export default function PortfolioDetail() {
           ← Back to Portfolio
         </Link>
       </footer>
+	  <ImageModal
+        open={!!selected}
+        src={selected?.src ?? ""}
+        alt={selected?.alt}
+        caption={selected?.caption}
+        onClose={() => setSelected(null)}
+      />
     </Content>
   );
 }

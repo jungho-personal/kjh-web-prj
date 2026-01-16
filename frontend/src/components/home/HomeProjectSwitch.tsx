@@ -43,7 +43,7 @@ export default function HomeProjectSwitch() {
     DW: [
       "CRM DW 구축 및 운영 프로젝트 수행",
       "DW 운영 자동화 및 성능 개선 경험",
-      "대규모 데이터 파이프라인 안정화",
+    //   "대규모 데이터 파이프라인 안정화",
     ],
     SaaS: [
       "SaaS 기반 CRM / 데이터 플랫폼 운영",
@@ -101,7 +101,7 @@ export default function HomeProjectSwitch() {
             {/* Left */}
             <div className="space-y-4">
               <div className="text-lg font-semibold">{category} Project</div>
-  
+
               <div className="space-y-1 text-sm text-muted-foreground leading-relaxed">
                 {descLinesMap[category].map((t) => (
                   <div key={t}>{t}</div>
@@ -161,7 +161,7 @@ function ImageTab({
       aria-pressed={active}
       title={alt}
       className={[
-        // ✅ 버튼 자체 크기/패딩 업
+        // ✅ 버튼 자체 크기/패딩 업4
         "rounded-xl px-4 py-3 transition",
         active ? "bg-background shadow-sm" : "bg-transparent hover:bg-background/60",
       ].join(" ")}
