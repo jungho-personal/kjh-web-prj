@@ -1,0 +1,327 @@
+PROJECT_CONTEXT.txt
+kjh-web-prj – Current Code & Runtime Context (Single Source of Truth)
+
+이 문서는 **현재 코드 기준의 사실(Facts)**만 기록한다.
+설명, 히스토리, 회고성 내용은 Dev Log 및 프로젝트 지침을 따른다.
+
+==================================================
+
+1. Project Overview
+
+- Project: Personal & Development Blog / Portfolio
+- Repository: https://github.com/jungho-personal/kjh-web-prj
+- Runtime Model: Frontend + Backend 단일 서버 통합 운영
+- Deployment: Railway (Docker 기반)
+- Local OS: Windows 11
+- Local Python Version: 3.11.5
+- Optional Dev Environment: WSL2 (Ubuntu 22.04)
+
+==================================================
+
+2. Tech Stack
+
+[Backend]
+- Python 3.11.x (Local 기준)
+- FastAPI
+- SQLAlchemy
+- PostgreSQL (Railway)
+- PGVector (Postgres Extension)
+
+[Frontend]
+- React (SPA)
+- Vite
+- TypeScript
+- Static build 결과를 Backend에서 서빙
+
+[Infra / Tools]
+- Docker (멀티 스테이지 빌드)
+- Railway
+- Git / GitHub
+- VSCode
+- DBeaver
+
+==================================================
+3. Repository Structure (Current)
+
+kjh-web-prj/
+ ├─ backend/
+ │   ├─ app/
+ │   │   ├─ api/
+ │   │   │   ├─ health.py
+ │   │   │   ├─ blog.py
+ │   │   │   ├─ auth.py
+ │   │   │   ├─ admin.py
+ │   │   │   └─ llm.py
+ │   │   │
+ │   │   ├─ db/
+ │   │   │   ├─ init_db.py
+ │   │   │   └─ session.py
+ │   │   │
+ │   │   ├─ models/
+ │   │   │   ├─ post.py
+ │   │   │   └─ base.py
+ │   │   │
+ │   │   ├─ schemas/
+ │   │   │   ├─ auth.py
+ │   │   │   ├─ llm.py
+ │   │   │   └─ post.py
+ │   │   │
+ │   │   ├─ services/
+ │   │   │   └─ blog_service.py
+ │   │   │
+ │   │   ├─ assets/
+ │   │   │   └─ resume.pdf
+ │   │   │
+ │   │   ├─ dependencies.py
+ │   │   └─ main.py   (FastAPI entrypoint)
+ │   │
+ │   ├─ static/
+ │   │   ├─ assets/
+ │   │   │   ├─ index-@@@@@.js
+ │   │   │   ├─ index-@@@@@.css
+ │   │   │   └─ project_slug_img.png
+ │   │
+ │   └─ requirements.txt
+ │
+ ├─ frontend/
+ │   ├─ src/
+ │   │   ├─ api/
+ │   │   │   ├─ admin.ts
+ │   │   │   ├─ auth.ts
+ │   │   │   ├─ client.ts
+ │   │   │   ├─ posts.ts
+ │   │   │   └─ types.ts
+ │   │   │
+ │   │   ├─ assets/
+ │   │   │   ├─ hero/
+ │   │   │   ├─ portfolio/
+ │   │   │   └─ profile/
+ │   │   │
+ │   │   ├─ components/
+ │   │   │   ├─ common/
+ │   │   │   │   ├─ ImageModal.tsx
+ │   │   │   │   └─ PaginationNumbers.tsx
+ │   │   │   │
+ │   │   │   ├─ home/
+ │   │   │   │   ├─ HomeHero.tsx
+ │   │   │   │   ├─ HomeProjectSwitch.tsx
+ │   │   │   │   └─ HomeResumeOverview.tsx
+ │   │   │   │
+ │   │   │   ├─ layout/
+ │   │   │   │   ├─ AppShell.tsx
+ │   │   │   │   ├─ Content.tsx
+ │   │   │   │   ├─ PageHeader.tsx
+ │   │   │   │   ├─ Sidebar.tsx
+ │   │   │   │   ├─ ThemeToggle.tsx
+ │   │   │   │   └─ TopNav.tsx
+ │   │   │   │
+ │   │   │   ├─ posts/
+ │   │   │   │   ├─ PostCard.tsx
+ │   │   │   │   ├─ PostDetailPage.tsx
+ │   │   │   │   └─ PostListPage.tsx
+ │   │   │   │
+ │   │   │   ├─ theme/
+ │   │   │   │   ├─ theme.ts
+ │   │   │   │   └─ ThemeProvider.tsx
+ │   │   │   │
+ │   │   │   └─ ui/
+ │   │   │       ├─ badge.tsx
+ │   │   │       ├─ button.tsx
+ │   │   │       ├─ card.tsx
+ │   │   │       ├─ input.tsx
+ │   │   │       ├─ label.tsx
+ │   │   │       ├─ separator.tsx
+ │   │   │       ├─ switch.tsx
+ │   │   │       └─ textarea.tsx
+ │   │   │
+ │   │   ├─ config/
+ │   │   │   └─ site.ts
+ │   │   │
+ │   │   ├─ constants/
+ │   │   │   └─ devlogTemplate.ts
+ │   │   │
+ │   │   ├─ content/
+ │   │   │   └─ portfolio/
+ │   │   │       ├─ types.ts
+ │   │   │       └─ index.ts
+ │   │   │
+ │   │   ├─ data/
+ │   │   │   └─ portfolio.ts
+ │   │   │
+ │   │   ├─ lib/
+ │   │   │   ├─ utils.ts
+ │   │   │   └─ portfolioAssets.ts
+ │   │   │
+ │   │   ├─ pages/
+ │   │   │   ├─ AdminEditor.tsx
+ │   │   │   ├─ AdminLogin.tsx
+ │   │   │   ├─ Blog.tsx
+ │   │   │   ├─ BlogDetail.tsx
+ │   │   │   ├─ DevLog.tsx
+ │   │   │   ├─ DevLogDetail.tsx
+ │   │   │   ├─ Home.tsx
+ │   │   │   ├─ Playground.tsx
+ │   │   │   ├─ Portfolio.tsx
+ │   │   │   ├─ PortfolioDetail.tsx
+ │   │   │   └─ Resume.tsx
+ │   │   │
+ │   │   ├─ utils/
+ │   │   │   ├─ date.ts
+ │   │   │   └─ slug.ts
+ │   │   │
+ │   │   ├─ App.css
+ │   │   ├─ App.tsx
+ │   │   ├─ index.css
+ │   │   └─ main.tsx
+ │   │
+ │   ├─ public/
+ │   ├─ package.json
+ │   └─ vite.config.ts
+ │
+ ├─ PROJECT_CONTEXT.txt
+ │
+ └─ Dockerfile
+
+Notes:
+- Repository 구조는 “디렉토리 레벨 변경”이 있을 때만 업데이트한다.
+- 파일 내용 추가/삭제만으로는 이 섹션을 수정하지 않는다.
+
+==================================================
+
+4. Backend Runtime Rules
+
+ 4.1 Entry Point
+ - Entrypoint file: backend/app/main.py
+ - App factory 패턴 사용
+ - 실제 export 대상:
+   app = create_app()
+
+ 4.2 API Routing Rules
+ - 모든 API는 /api prefix 사용
+ - 예:
+   /api/health
+   /api/blog
+   /api/admin
+   /api/llm
+
+ 4.3 SPA Fallback Rule
+ - 요청 경로가 /api 로 시작하면:
+   → 404 반환 (SPA fallback 금지)
+
+ - 그 외 모든 경로:
+   → static/index.html 반환
+
+==================================================
+
+5. Static & Frontend Build Handling
+
+- 운영 환경에서는 React dev server 사용하지 않음
+- Frontend는 로컬에서 build 수행 후 결과물을 backend에서 서빙
+- build 결과는 static/ 디렉토리에 위치
+
+정적 파일 접근:
+- /assets → 정적 asset 서빙
+- /resume.pdf → inline PDF 뷰 (브라우저/iframe)
+- /resume-download.pdf → attachment 다운로드
+
+==================================================
+
+6. Database
+
+ 6.1 Database Engine
+ - PostgreSQL (Railway managed DB)
+ - SQLAlchemy Engine 사용
+
+ 6.2 DB Initialization Rule
+ - 환경변수:
+ - DB_AUTO_CREATE=true | false
+
+ - 동작:
+   true:
+   Base.metadata.create_all() 실행
+
+   false:
+   자동 테이블 생성 비활성화
+
+Notes:
+로컬 환경에서는 운영 DB를 바라볼 수 있음
+로컬에서는 DML(INSERT/UPDATE/DELETE) 작업을 수행하지 않음
+추가적인 read-only 방어 로직은 구현하지 않음
+
+==================================================
+
+7. Authentication / Admin
+
+- Admin API는 개인 사용 전용
+- 외부 사용자 없음
+- 인증 방식: 단순 토큰 비교
+
+Header:
+X-Admin-Token: <token>
+
+Notes:
+- JWT 미사용
+- 토큰 로테이션/만료 정책 없음
+- 현재 구조 유지
+
+Admin API path:
+- /api/admin/*
+
+==================================================
+
+8. Environment Variables (Keys Only)
+- APP_NAME
+- ENV (local | prod)
+- DATABASE_URL
+- DB_AUTO_CREATE
+- ADMIN_TOKEN
+
+Notes:
+- 값(value)은 문서에 기록하지 않음
+- .env 파일은 gitignore 대상
+
+==================================================
+
+9. Local Development
+
+[Backend]
+- Windows 로컬에서 실행 가능
+- venv 사용 (OS별 venv 분리)
+
+[Frontend]
+- Windows 로컬에서 실행 가능
+- npm run dev → 개발 확인
+- npm run build → 운영용 static 생성
+
+==================================================
+
+10. LLM API Status
+
+- /api/llm 은 아직 구현 시작 전
+- 현재는 placeholder 상태
+- 향후 작업 예정
+
+==================================================
+
+11. Documentation & Update Rules
+
+- 이 문서는 “항상 현재 상태”를 유지하는 문서임
+- 아래 상황 발생 시 즉시 업데이트:
+ 프로젝트 구조 변경
+ 런타임 규칙 변경
+ ENV 규칙 변경
+ 기존 코드 동작 방식 변경
+
+==================================================
+
+12. Dev Log / Documentation Policy
+
+- 모든 작업은 Dev Log로 기록
+
+- 새로운 작업이나 변경 사항이 있을 경우:
+  관련 문서 즉시 업데이트
+- 문서 업데이트는 git commit 메시지 작성과 동일한 중요도로 취급
+
+==================================================
+
+End of PROJECT_CONTEXT.txt
