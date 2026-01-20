@@ -17,6 +17,11 @@ from app.api.llm import router as llm_router
 
 load_dotenv()
 
+@app.on_event("startup")
+def on_startup():
+    if os.getenv("DB_AUTO_CREATE", "true").lower() == "true":
+        Base.metadata.create_all(bind=engine)
+
 def create_app() -> FastAPI:
     app_name = os.getenv("APP_NAME", "kjh-web-prj")
     env = os.getenv("ENV", "local")

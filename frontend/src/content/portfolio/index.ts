@@ -13,12 +13,12 @@ export const portfolioDetails: PortfolioDetail[] = [
     summary:
       "Volvo Car Korea의 CRM 데이터를 기반으로 마케팅·영업 분석을 지원하는 DW 시스템을 운영하며, 배치 안정성·데이터 정합성·장애 대응을 중심으로 실무 전반을 담당했습니다.",
     techStack: [
-      "Oracle",
+    //   "Oracle",
       "SQL Server",
       "Python",
       "Stored Procedure",
       "Windows Server",
-      "ETL",
+    //   "ETL",
     ],
     heroImage: "volvo-crm-dw-ops__dw__hero.png",
 
@@ -176,7 +176,9 @@ export const portfolioDetails: PortfolioDetail[] = [
     subtitle: "CRM 관점 DW 구축 및 데이터 품질 표준화·운영 안정화",
     summary:
       "고객 통합·고객 성향·캠페인/채널·평가·세그먼트 등 마케팅 활용을 위한 CRM DW 구축을 수행했습니다. 데이터 품질/정합성 문제를 해결하기 위해 CRM_ID 기준의 표준 모델을 수립하고, ETL 파이프라인 구현과 운영 안정화까지 전반을 담당했습니다.",
-    techStack: [
+    techStack: ["Oracle"
+				, "Stored Procedure"
+				, "Informatica"
     ],
     heroImage: "renault-crm-dw-build-ops__dw__hero.png",
 
