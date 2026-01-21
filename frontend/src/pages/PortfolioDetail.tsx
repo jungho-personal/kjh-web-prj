@@ -52,7 +52,11 @@ export default function PortfolioDetail() {
 
         <h1 className="text-3xl font-bold leading-tight">{data.title}</h1>
 
-        {data.summary ? <p className="text-muted-foreground">{data.summary}</p> : null}
+        {data.summary ? (
+          <p className="text-muted-foreground whitespace-pre-line">
+            {data.summary}
+          </p>
+        ) : null}
 
         {data.roles?.length ? (
           <div className="flex flex-wrap gap-2 pt-1">
@@ -176,25 +180,33 @@ export default function PortfolioDetail() {
                       <div className="pl-4 space-y-2 text-foreground/90">
                         <div>
                           <span className="font-semibold">• Issue</span>
-                          <div className="text-muted-foreground">{it.issue}</div>
+                           <div className="text-muted-foreground whitespace-pre-line">
+                             {it.issue}
+                           </div>
                         </div>
               
                         {it.cause ? (
                           <div>
                             <span className="font-semibold">• Cause</span>
-                            <div className="text-muted-foreground">{it.cause}</div>
+                             <div className="text-muted-foreground whitespace-pre-line">
+                               {it.cause}
+                             </div>
                           </div>
                         ) : null}
               
                         <div>
                           <span className="font-semibold">• Fix</span>
-                          <div className="text-muted-foreground">{it.fix}</div>
+                           <div className="text-muted-foreground whitespace-pre-line">
+                             {it.fix}
+                           </div>
                         </div>
               
                         {it.result ? (
                           <div>
                             <span className="font-semibold">• Result</span>
-                            <div className="text-muted-foreground">{it.result}</div>
+                             <div className="text-muted-foreground whitespace-pre-line">
+                               {it.result}
+                             </div>
                           </div>
                         ) : null}
                       </div>

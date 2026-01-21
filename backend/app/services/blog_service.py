@@ -35,15 +35,40 @@ def list_posts(
 ) -> Tuple[List[Post], Optional[str]]:
     offset = _decode_cursor(cursor)
 
-    stmt = select(Post).where(Post.published.is_(True))
+    stmt = select(
+        Post.id,
+        Post.slug,
+        Post.title,
+        Post.summary,
+        Post.category,
+        Post.tags,
+        Post.published,
+        Post.created_at,
+        Post.updated_at,
+    ).where(Post.published.is_(True))
+    
     if category:
         stmt = stmt.where(Post.category == category)
 
     stmt = stmt.order_by(desc(Post.created_at)).offset(offset).limit(limit + 1)
-    rows = db.execute(stmt).scalars().all()
+    rows = db.execute(stmt).all()
 
     has_next = len(rows) > limit
-    items = rows[:limit]
+    sliced = rows[:limit]
+    items = [
+        {
+            "id": str(r.id),
+            "slug": r.slug,
+            "title": r.title,
+            "summary": r.summary,
+            "category": r.category,
+            "tags": r.tags,
+            "published": r.published,
+            "created_at": r.created_at,
+            "updated_at": r.updated_at,
+        }
+        for r in sliced
+    ]
     next_cursor = _encode_cursor(offset + limit) if has_next else None
     return items, next_cursor
 

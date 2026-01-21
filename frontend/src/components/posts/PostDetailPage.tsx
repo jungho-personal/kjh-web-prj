@@ -8,7 +8,7 @@ import { adminMe } from "@/api/admin";
 import type { PostBase, PostDetail } from "@/api/types";
 import { Content } from "@/components/layout/Content";
 import { Button } from "@/components/ui/button";
-import { PaginationNumbers } from "@/components/common/PaginationNumbers";
+// import { PaginationNumbers } from "@/components/common/PaginationNumbers";
 import { formatKoreanDate } from "@/utils/date";
 
 
@@ -46,26 +46,21 @@ export default function PostDetailPage({ backTo, backLabel, expectedCategory }: 
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
 
-  const MORE_PAGE_SIZE = 5;
-  const [morePage, setMorePage] = useState(1);
+//   const MORE_PAGE_SIZE = 5;
+//   const [morePage, setMorePage] = useState(1);
 
   // ✅ 쿠키 기반 admin 상태
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // ✅ 하단 추천 목록
-  const [more, setMore] = useState<PostBase[]>([]);
-  const [moreLoading, setMoreLoading] = useState(false);
+  // ✅ Prev / Next
+  const [nav, setNav] = useState<{ prev?: PostBase; next?: PostBase }>({});
+  const [navLoading, setNavLoading] = useState(false);
 
   const createdText = useMemo(() => {
     if (!post?.created_at) return "";
     return formatKoreanDate(post.created_at);
   }, [post?.created_at]);
 
-
-  useEffect(() => {
-    // post가 바뀔 때(새 slug로 이동) More 페이지는 1로 리셋
-    setMorePage(1);
-  }, [post?.slug]);
 
   useEffect(() => {
     // 페이지 로드 시 한 번만 admin 여부 체크 (쿠키 기반)
@@ -104,41 +99,45 @@ export default function PostDetailPage({ backTo, backLabel, expectedCategory }: 
     })();
   }, [slug, expectedCategory]);
 
-  // ✅ post 로딩 완료 후 "More posts" 가져오기
-  // - 현재 글 기준 날짜 가까운 순 정렬
-  // - 여기서 slice(0,5) 하면 totalPages가 1로 고정되므로 절대 자르지 않음
+  // post 로딩 완료 후 Prev/Next 계산
   useEffect(() => {
     (async () => {
       if (!post) return;
 
       try {
-        setMoreLoading(true);
+         setNavLoading(true);
 
         if (post.category === "portfolio") {
-          setMore([]);
+           setNav({});
           return;
         }
 
         const res = await listPosts({
           category: post.category,
-          limit: 50, // ✅ 후보를 충분히 가져와야 페이지네이션이 살아남
+          limit: 200, // Prev/Next 계산용으로 충분하게
         });
 
-        const baseTime = new Date(post.created_at).getTime();
-
-        const filteredSorted = res.items
-          .filter((x) => x.slug !== post.slug)
-          .sort((a, b) => {
-            const da = Math.abs(new Date(a.created_at).getTime() - baseTime);
-            const db = Math.abs(new Date(b.created_at).getTime() - baseTime);
-            return da - db; // ✅ 가까운 날짜 우선
-          });
-
-        setMore(filteredSorted);
+         // ✅ 최신순(desc) 정렬
+         const sorted = [...res.items].sort(
+           (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+         );
+ 
+         const idx = sorted.findIndex((x) => x.slug === post.slug);
+         if (idx < 0) {
+           setNav({});
+           return;
+         }
+ 
+         // sorted: [최신 .... 과거]
+         //  "이전 글" = 더 과거(older) => idx + 1
+         //  "다음 글" = 더 최신(newer) => idx - 1
+         const prev = sorted[idx + 1];
+         const next = sorted[idx - 1];
+         setNav({ prev, next });
       } catch {
-        setMore([]);
+         setNav({});
       } finally {
-        setMoreLoading(false);
+         setNavLoading(false);
       }
     })();
   }, [post]);
@@ -209,7 +208,7 @@ export default function PostDetailPage({ backTo, backLabel, expectedCategory }: 
           {post.category !== "portfolio" ? (
             <section className="pt-2 space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-base font-semibold">More posts</h2>
+                <h2 className="text-base font-semibold">Previous / Next</h2>
                 <Link
                   to={post.category === "blog" ? "/blog" : "/dev-log"}
                   className="text-sm text-muted-foreground hover:underline"
@@ -218,77 +217,60 @@ export default function PostDetailPage({ backTo, backLabel, expectedCategory }: 
                 </Link>
               </div>
 
-              {moreLoading ? (
-                <div className="rounded-2xl border p-6 text-sm text-muted-foreground">
-                  Loading more posts...
-                </div>
-              ) : more.length ? (
-                (() => {
-                  const totalPages = Math.max(1, Math.ceil(more.length / MORE_PAGE_SIZE));
-                  const currentPage = Math.min(Math.max(morePage, 1), totalPages);
-                  const start = (currentPage - 1) * MORE_PAGE_SIZE;
-                  const view = more.slice(start, start + MORE_PAGE_SIZE);
-
-                  const basePath = post.category === "blog" ? "/blog" : "/dev-log";
-                 
-                  return (
-                    <div className="space-y-3">
-                      {/* ✅ list (테두리/라운드 제거, 구분선만) */}
-                      <div className="divide-y">
-                        {view.map((p) => (
-                          <Link
-                            key={p.slug}
-                            to={`${basePath}/${p.slug}`}
-                            className="block py-5 transition hover:bg-accent/20"
-                          >
-                            <div className="flex items-start justify-between gap-6">
-                              <div className="min-w-0 space-y-2">
-                                <p className="text-base font-semibold leading-snug">{p.title}</p>
-                  
-                                {p.summary ? (
-                                  <p className="text-sm text-muted-foreground line-clamp-2">
-                                    {p.summary}
-                                  </p>
-                                ) : null}
-                  
-                                {p.tags?.length ? (
-                                  <div className="flex flex-wrap gap-2 pt-1">
-                                    {p.tags.map((t) => (
-                                      <span key={t} className="text-xs text-muted-foreground">
-                                        #{t}
-                                      </span>
-                                    ))}
-                                  </div>
-                                ) : null}
-                              </div>
-                  
-                              <time className="shrink-0 text-xs text-muted-foreground whitespace-nowrap pt-1">
-                                {formatKoreanDate(p.created_at)}
-                              </time>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                  
-                      {/* ✅ 숫자 pagination (공용 컴포넌트) */}
-                      <PaginationNumbers
-                        page={currentPage}
-                        totalPages={totalPages}
-                        onChange={(p) => {
-                          setMorePage(p);
-                          window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-                        }}
-                      />
-                    </div>
-                  );
-                })()
-              ) : (
-                <div className="rounded-2xl border p-6 text-sm text-muted-foreground">
-                  더 보여줄 글이 없어요.
-                </div>
-              )}
-            </section>
-          ) : null}
+               {navLoading ? (
+                 <div className="rounded-2xl border p-6 text-sm text-muted-foreground">
+                   Loading...
+                 </div>
+               ) : (
+                 (() => {
+                   const basePath = post.category === "blog" ? "/blog" : "/dev-log";
+                   const Card = ({
+                     kind,
+                     p,
+                     alignRight,
+                   }: {
+                     kind: "prev" | "next";
+                     p?: PostBase;
+                     alignRight?: boolean;
+                   }) => {
+                     const label = kind === "prev" ? "← Previous" : "Next →";
+                     if (!p) {
+                       return (
+                         <div className={`rounded-2xl border p-5 opacity-60 ${alignRight ? "text-right" : ""}`}>
+                           <div className="text-xs text-muted-foreground">{label}</div>
+                           <div className="text-sm text-muted-foreground mt-1">없음</div>
+                         </div>
+                       );
+                     }
+                     return (
+                       <Link
+                         to={`${basePath}/${p.slug}`}
+                         className={`block rounded-2xl border p-5 transition hover:bg-accent/20 ${alignRight ? "text-right" : ""}`}
+                       >
+                         <div className="text-xs text-muted-foreground">{label}</div>
+                         <div className="mt-2 text-base font-semibold leading-snug">{p.title}</div>
+                         {p.summary ? (
+                           <div className="mt-1 text-sm text-muted-foreground line-clamp-2">
+                             {p.summary}
+                           </div>
+                         ) : null}
+                         <time className="mt-2 block text-xs text-muted-foreground">
+                           {formatKoreanDate(p.created_at)}
+                         </time>
+                       </Link>
+                     );
+                   };
+ 
+                   return (
+                     <div className="grid gap-3 sm:grid-cols-2">
+                       <Card kind="prev" p={nav.prev} />
+                       <Card kind="next" p={nav.next} alignRight />
+                     </div>
+                   );
+                 })()
+               )}
+             </section>
+           ) : null}
         </article>
       ) : null}
     </Content>

@@ -324,4 +324,18 @@ Notes:
 
 ==================================================
 
+[2026.01.21 Update]
+
+- Blog / DevLog / Portfolio List 페이지는 cursor 기반 pagination을 사용하며,
+  초기 로딩 시 제한된 개수(limit)만 조회한 뒤 "더보기(Load more)" 방식으로 추가 로딩한다.
+- List 페이지에서는 content_md(본문)를 포함하지 않으며,
+  상세 페이지(detail)에서만 content_md를 조회한다.
+- 운영 환경 및 로컬 개발 환경 모두 Railway PostgreSQL 운영 DB를 사용한다.
+  (TCP Proxy 기반 DATABASE_URL 사용)
+- Postgres posts 테이블에 published, category, created_at 기준 인덱스를 추가하여
+  list 조회 성능을 최적화했다.
+- Portfolio List 페이지는 카드(Grid) 기반 UI를 제거하고,
+  Blog / DevLog와 동일한 리스트(divide-y) 구조로 통일했다.
+
+
 End of PROJECT_CONTEXT.txt

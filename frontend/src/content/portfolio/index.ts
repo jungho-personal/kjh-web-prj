@@ -138,8 +138,8 @@ export const portfolioDetails: PortfolioDetail[] = [
           },
           {
             kind: "shot",
-            filename: "volvo-crm-dw-ops__dw__arch_cat.png",
-            caption: "우리집 야옹이 귀엽죠",
+            filename: "volvo-crm-dw-ops__dw__arch_mainpage.png",
+            caption: "VCK CRM-DW 대시보드",
           },
         ],
       },
@@ -175,7 +175,7 @@ export const portfolioDetails: PortfolioDetail[] = [
     roles: ["DW Engineer"],
     subtitle: "CRM 관점 DW 구축 및 데이터 품질 표준화·운영 안정화",
     summary:
-      "고객 통합·고객 성향·캠페인/채널·평가·세그먼트 등 마케팅 활용을 위한 CRM DW 구축을 수행했습니다. 데이터 품질/정합성 문제를 해결하기 위해 CRM_ID 기준의 표준 모델을 수립하고, ETL 파이프라인 구현과 운영 안정화까지 전반을 담당했습니다.",
+      "고객 통합·고객 성향·캠페인/채널·평가·세그먼트 등 마케팅 활용을 위한 CRM DW 구축을 수행했습니다.\n데이터 품질/정합성 문제를 해결하기 위해 CRM_ID 기준의 표준 모델을 수립하고, ETL 파이프라인 구현과 운영 안정화까지 전반을 담당했습니다.",
     techStack: ["Oracle"
 				, "Stored Procedure"
 				, "Informatica"
@@ -235,9 +235,10 @@ export const portfolioDetails: PortfolioDetail[] = [
         type: "bullets",
         title: "Scale & Usage",
         items: [
-          "고객 통합, 고객 성향, 캠페인/채널, 고객 평가, 세그먼트 등 마케팅 활용 중심의 도메인 통합",
           "고객 단위 분석 및 개인화 마케팅을 위한 ‘단일 고객 기준’(CRM_ID) 중심 모델 운영",
+          "차량 재원 정보, 수리 이력, 캠페인 참여 이력 등 고객 기준의 도메인 통합",
           "동의/수신/활용 등 민감 데이터를 최신 기준으로 표준화하고 스냅샷/이력 테이블로 관리",
+          "통합 고객 데이터 활용하여 마케팅 대상 & 성과 보고서 데이터 추출",
         ],
       },
 
@@ -246,9 +247,8 @@ export const portfolioDetails: PortfolioDetail[] = [
         title: "My Role",
         items: [
           "원천 테이블 기반 AS-IS 분석 → 질문 리스트 생성으로 요구사항 정의 리드",
-          "CRM_ID 설계/채번 및 고객 중복 제거를 위한 데이터 정재 로직 구현",
-          "차량-고객 1:N 비정합 데이터에서 실 소유 고객 판별 로직 설계",
-          "개인정보/마케팅 동의 데이터 표준화 및 최신일자 기반 적재·스냅샷 설계",
+          "Front 화면 Query 제작 → 고객그룹조회/회원정보조회/리드조회/차량판매조회 외 7건",
+		  "데이터 추출 Query 제작 → 자동화 쿼리 5개 외 28건",
           "다중 이해관계자(고객사/대행사/컨설팅사) 커뮤니케이션 및 합의 도출",
         ],
       },
@@ -262,16 +262,16 @@ export const portfolioDetails: PortfolioDetail[] = [
             cause:
               "중복 고객(한 DI에 다수 고객 매핑), 차량-고객 관계 비정합(1:N 다수 존재), 동의 데이터의 표준 부재가 동시에 존재",
             fix:
-              "유효하지 않은 고객을 제외하고 DI 기준으로 CRM_ID를 신규 채번하여 단일 고객 기준을 수립. CRM_ID 기반으로 실 소유 고객 판별 로직을 설계해 차량-고객 매핑을 정재. 동의 항목은 최신일자 기준으로 표준화 적재하고 Snapshot/이력 테이블을 구성",
+              "유효하지 않은 고객을 제외하고 DI 기준으로 CRM_ID를 신규 채번하여 단일 고객 기준을 수립.\nCRM_ID 기반으로 실 소유 고객 판별 로직을 설계해 차량-고객 매핑을 정재.\n동의 항목은 최신일자 기준으로 표준화 적재하고 Snapshot/이력 테이블을 구성.",
             result:
-              "DW 내 중복 고객 제거 및 CRM_ID 기준 개인화 마케팅 기반 확보. 차량 중심 CRM 마케팅도 가능해졌고, 동의 정보는 이력 관리로 정확성과 운영 신뢰도가 향상됨",
+              "DW 내 중복 고객 제거 및 CRM_ID 기준 개인화 마케팅 기반 확보.\n차량 중심 CRM 마케팅도 가능해졌고, 동의 정보는 이력 관리로 정확성과 운영 신뢰도가 향상됨",
           },
           {
             issue: "요구사항 정의 단계에서 커뮤니케이션 비용이 과도하게 큼",
             cause:
               "고객사는 데이터 구조/적재 규칙을 상세히 알지 못했고(대행 위임), 대행사는 대응이 보수적이며, 컨설팅사는 데이터 구조 이해가 낮아 실무 논의가 지연됨",
             fix:
-              "고객사가 제공한 테이블만으로 AS-IS 구조를 먼저 분석하고, 질문 리스트로 요구사항을 구조화. AS-IS 분석 결과를 기반으로 고객사/대행사 부담을 줄이면서 TO-BE에 필요한 항목을 구체적으로 요청. 컨설팅사에는 쉬운 용어/예시로 설명하여 이해를 맞춤",
+              "고객사가 제공한 테이블만으로 AS-IS 구조를 먼저 분석하고, 질문 리스트로 요구사항을 구조화.\nAS-IS 분석 결과를 기반으로 고객사/대행사 부담을 줄이면서 TO-BE에 필요한 항목을 구체적으로 요청.\n컨설팅사에는 쉬운 용어/예시로 설명하여 이해를 맞춤",
             result:
               "요구사항 합의가 안정화되었고, DW 구축을 일정 내 성공적으로 완료하여 CRM 마케팅 운영으로 연결",
           },
@@ -280,7 +280,7 @@ export const portfolioDetails: PortfolioDetail[] = [
             cause:
               "팀 내 역량 편차로 인해 일부 업무가 집중되었고, 분석이 완료되기 전에도 추출 요청이 지속적으로 발생",
             fix:
-              "요청 목적을 먼저 확인한 뒤 필요한 조건을 재정의하고, 반복 요청은 패턴화하여 대응 효율을 높임. 동시에 데이터 구조 이해도를 확장하며 검증 쿼리/추출 SQL 품질을 강화",
+              "요청 목적을 먼저 확인한 뒤 필요한 조건을 재정의하고, 반복 요청은 패턴화하여 대응 효율을 높임 (Query 템플릿화).\n동시에 데이터 구조 이해도를 확장하며 검증 쿼리/추출 SQL 품질을 강화.",
             result:
               "운영 대응을 유지하면서도 구축을 마무리했으며, 대용량 데이터 분석 및 SQL 작성 역량이 크게 향상됨",
           },
@@ -312,6 +312,26 @@ export const portfolioDetails: PortfolioDetail[] = [
             kind: "shot",
             filename: "renault-crm-dw-build-ops__dw__shot2.png",
             caption: "CRM DW 구축 ERD",
+          },
+          {
+            kind: "shot",
+            filename: "renault-crm-dw-build-ops__dw__shot5.png",
+            caption: "고객사 데이터 프로파일링(1)",
+          },
+          {
+            kind: "shot",
+            filename: "renault-crm-dw-build-ops__dw__shot6.png",
+            caption: "고객사 데이터 프로파일링(2)",
+          },
+          {
+            kind: "shot",
+            filename: "renault-crm-dw-build-ops__dw__shot3.png",
+            caption: "컨설팅사와 커뮤니케이션(1)",
+          },
+          {
+            kind: "shot",
+            filename: "renault-crm-dw-build-ops__dw__shot4.png",
+            caption: "컨설팅사와 커뮤니케이션(2)",
           },
         ],
       },
@@ -351,7 +371,7 @@ export const portfolioDetails: PortfolioDetail[] = [
     roles: ["CDP Operator", "Data Engineer"],
     subtitle: "고객 데이터 통합 기반 개인화 마케팅/인사이트 운영 지원",
     summary:
-      "LG전자 한국영업본부 마케팅 조직을 대상으로 Treasure Data CDP(Customer Data Platform)를 운영·유지보수했습니다. 다양한 원천(오프라인/온라인/콜센터/렌탈 등)의 고객 데이터를 고객 중심으로 통합해 개인화 마케팅과 데이터 분석이 가능하도록 ETL 배치 점검, 대시보드/추출 요청 대응, 세그먼트 샘플 제작 등을 담당했습니다.",
+      "LG전자 한국영업본부 마케팅 조직을 대상으로 Treasure Data CDP(Customer Data Platform)를 운영·유지보수했습니다.\n다양한 원천(오프라인/온라인/콜센터/렌탈 등)의 고객 데이터를 고객 중심으로 통합한 서비스에서 데이터 분석이 가능하도록 ETL 배치 점검, 대시보드/추출 요청 대응, 세그먼트 샘플 제작 등을 담당했습니다.",
     techStack: ["Treasure Data CDP"],
     heroImage: "lg-td-cdp-ops__saas__hero.png",
 
@@ -384,7 +404,7 @@ export const portfolioDetails: PortfolioDetail[] = [
         type: "text",
         title: "Context",
         body: [
-          "본 프로젝트는 LG전자 한국영업본부의 마케팅 및 데이터 인사이트 업무를 지원하기 위해 Treasure Data CDP를 운영·유지보수하는 업무입니다.",
+          "본 프로젝트는 LG전자 한국영업본부의 마케팅 및 데이터 인사이트 팀 업무를 지원하기 위해 Treasure Data CDP를 운영·유지보수하는 업무입니다.",
           "여러 원천(오프라인 매장, 온라인 웹/앱, 콜센터, 렌탈 서비스 등)에 흩어진 고객 데이터를 고객 중심으로 통합하여, 고객 행동 이력 기반의 분석과 개인화 마케팅 실행이 가능하도록 플랫폼을 안정적으로 운영하는 것이 핵심 목적이었습니다.",
         ],
         bulletsTitle: "주요 활용",
@@ -457,13 +477,18 @@ export const portfolioDetails: PortfolioDetail[] = [
         items: [
           {
             kind: "shot",
-            filename: "lg-td-cdp-ops__saas__shot1.png",
-            caption: "CDP 데이터 통합/활용 구조(예시 이미지)",
+            filename: "lg-td-cdp-ops__saas__shot2.png",
+            caption: "세그먼트/대시보드 운영 사례(대시보드)",
           },
           {
             kind: "shot",
-            filename: "lg-td-cdp-ops__saas__shot2.png",
-            caption: "세그먼트/대시보드 운영 사례(예시 이미지)",
+            filename: "lg-td-cdp-ops__saas__shot3.png",
+            caption: "세그먼트/대시보드 운영 사례(세그먼트)",
+          },
+          {
+            kind: "shot",
+            filename: "lg-td-cdp-ops__saas__shot1.png",
+            caption: "CDP 관리 테이블 중 일부 ERD",
           },
         ],
       },
@@ -503,7 +528,7 @@ export const portfolioDetails: PortfolioDetail[] = [
     roles: ["DW Engineer", "Backend Engineer"],
     subtitle: "딜러사 마케팅 메시징(발송/자동화) 기능 고도화 및 동의 대시보드 구축",
     summary:
-      "VCK 딜러사 마케팅 사용자의 활용성 제고를 목표로, CRM DW 기반 문자 발송/자동화 기능과 개인정보동의 현황 대시보드를 개발했습니다. 동의 표준화에 따른 Mart 구조 업데이트, 수신거부 고객 API 연동, 발송 내역 조회용 Data View 구축, 고객 활성화 로직 구현 및 PHP UI 버그 개선을 수행했습니다.",
+      "VCK 딜러사 마케팅 사용자의 활용성 제고를 목표로, CRM DW 기반 문자 발송/자동화 기능과 개인정보동의 현황 대시보드를 개발했습니다.\n동의 표준화에 따른 Dashboard 조회용 Mart, 수신거부 고객 API 연동, 발송 내역 조회용 Data View 구축, 고객 활성화 로직 구현 및 PHP UI 버그 개선을 수행했습니다.",
     heroImage: "volvo-crm-dw-msg-consent-dashboard__dw__hero.png",
 
     sections: [
@@ -592,7 +617,7 @@ export const portfolioDetails: PortfolioDetail[] = [
             cause:
               "딜러사마다 분리된 기준(영업번호)으로 수신거부 목록을 가져와야 했고, 주기 실행/장애 감지까지 고려 필요",
             fix:
-              "딜러사/영업번호 기준 중첩 루프로 수집 프로세스를 설계하고, 주기 실행되도록 Windows Service로 구현. 추가로 Healthcheck 로직을 구성해 실행 상태를 감시",
+              "딜러사/영업번호 기준 중첩 루프로 수집 프로세스를 설계하고, 주기 실행되도록 Windows Service로 구현.\n추가로 Healthcheck 로직을 구성해 실행 상태를 감시",
             result:
               "수신거부 반영 누락을 줄이고, 운영 환경에서 안정적으로 자동 수집/반영되도록 체계화",
           },

@@ -14,29 +14,13 @@ router = APIRouter(prefix="/posts", tags=["posts"])
 @router.get("", response_model=PostListResponse)
 def api_list_posts(
     category: Optional[str] = Query(default=None),
-    limit: int = Query(default=10, ge=1, le=50),
+    limit: int = Query(default=10, ge=1, le=200),
     cursor: Optional[str] = Query(default=None),
     db: Session = Depends(get_db),
 ):
     items, next_cursor = list_posts(db, category, limit, cursor)
 
-    resp_items = []
-    for p in items:
-        resp_items.append(
-            {
-                "id": str(p.id),
-                "slug": p.slug,
-                "title": p.title,
-                "summary": p.summary,
-                "category": p.category,
-                "tags": p.tags,
-                "published": p.published,
-                "created_at": p.created_at,
-                "updated_at": p.updated_at,
-            }
-        )
-
-    return {"items": resp_items, "next_cursor": next_cursor}
+    return {"items": items, "next_cursor": next_cursor}
 
 
 @router.get("/{slug}", response_model=PostDetail)

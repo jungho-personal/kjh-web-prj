@@ -1,67 +1,208 @@
-Project Name : Personal & Development Blog and Portfolio (kjh-web-prj)
+PROJECT_GUIDELINE.txt
+Personal & Development Blog and Portfolio (kjh-web-prj)
 
-Implement Goals
-	- Development log + Blog log
-	- LLM Web Service
-	- Make an Online Personal Webpage to use cloud service
-	
-Tech Stack
-	- Language
-		* python
-		* Javascript
-	- Framework
-		* React
-		* FastAPI
-	- DB
-		* PostgreSQL
-		* PGVector (Postgre extension)
-	- OS
-		* tbd
-	- Tools
-		* VSCode	- code editor
-		* DBeaver	- db editor
-		* GPT		- ai helper
-		* Gemini	- ai helper
-		* docker	- deploy tool & use db image
-		* git		- Version Control
-		
-서버는 한곳에서 통합하여 운영 (front / back 나누지 않음)
--> 개인 프로젝트이며, 규모가 크지 않기 때문에 관리 포인트를 줄이고자 한 서버에서 운영. project dir 에서 폴더를 분기하여 설계
+==================================================
 
-서버 호스팅은 railway로
--> PaaS 라서 배포가 비교적 간편함
--> 내가 원하는 tool, service 모두 구현 가능
--> server sleep 이 없음(render를 고르지 않은 이유 중 1)
--> DB 유지보수 (render를 고르지 않은 이유 중 2 -> render 는 90일 뒤 db가 삭제...)
--> 현 프로젝트에 사용할 python, docker.. 를 편하게 사용 가능
-	(gcp 나 aws 선택안한 이유 나중에 후술 -> 보안, 네트워크, ssl 인증 등 현재 개인 프로젝트에서 직적 하나하나 구현은 too much라고 생각)
-	(같은 PaaS 중에 render 를 선택하지 않은 이유.. 처음엔 git push, commit에 배포가 되어서 이걸 하려고 했지만,, 결국 1번과 2번 문제로 인해)
+0. Purpose of This Document
 
+이 문서는 kjh-web-prj 프로젝트의 “지침(Guideline)”이다.
 
-이 내용을 바탕으로 개인 프로젝트를 진행할거야. 
-이 내용을 기반으로 대답을 해야 하고, 더 나은 방향이 보이면 제안해야해.
+이 문서의 목적은 다음과 같다.
 
-이 주소는 이 프로젝트의 git hub 주소야. 항상 대화할 때 이 git hub에 등록된 프로젝트 기반으로 대답을 해야해.
-https://github.com/jungho-personal/kjh-web-prj
+- 프로젝트의 목표와 방향을 명확히 한다.
+- 기술 및 구조 선택의 판단 기준을 고정한다.
+- 시간이 지나도 드래프트가 생기지 않도록 한다.
+- 프로젝트 관련 모든 분석과 의사결정의 기준점을 제공한다.
 
-개발 환경 OS 는 Window 11 기반이야.
+이 문서는 다음을 다루지 않는다.
+- 현재 코드 구조
+- 파일/디렉토리 구성
+- 구현 상태
+- 런타임 설정 및 환경변수
+- 배포 상세
 
-아래 작성하는 건 프로젝트 진척도야. 우리 대화할 때 프로젝트 진행 척도나 순서 등에 대해서 이야기할 때 이 내용을 참고해서 대답해야 해.
-20251229: fastapi + docker + railway 로 개인 서비스 배포 완료
-20251230: Railway PostgreSQL 연동 및 운영 DB 테이블 자동 생성, Blog/Dev Log API 실데이터 CRUD 검증 완료, React SPA 라우팅 및 Static 서빙 이슈 해결
-20251231: Admin Markdown Editor 구현, JWT 기반 관리자 로그인 및 글 생성 API 연동 완료, Docker 멀티 스테이지 빌드 적용으로 프론트/백엔드 통합 배포 성공
-20260102: Admin Editor 배포 이슈 해결(라우팅/캐시/커밋), Railway 환경에서 Authorization 헤더 누락 문제 분석 후 X-Admin-Token 기반 관리자 인증 적용, 운영 환경에서 Admin 글 등록 정상화 완료
-20260102_v2: Admin 인증 구조 개편 및 글 수정 기능 안정화 / admin 인증 간편화(env에 등록해서 비교. JWT사용안함)
-20260105: Sidebar 기반 SPA 레이아웃으로 구조 리팩토링, Content 영역의 max-width/padding 설계 문제를 해결하여 페이지별 여백·정렬 기준을 명확히 정리
-20260106: Home UI 테마 v1 확정(Indigo 기반), Sidebar/Navigation UX 정리, Hero 및 섹션 구분 개선 후 프론트엔드 빌드·배포 안정화 완료
-20260106_v2: Blog/Dev Log List·Detail UI 리팩토링, 카드형 레이아웃 제거 및 구분선 기반 리스트 구조로 통일, 숫자형 페이지네이션 강조 스타일 적용으로 가독성·탐색 UX 개선
-20260112: Home 화면 전면 리디자인 완료, Hero 우측 프로젝트 탭(DW/SaaS/AI PoC) 구조 도입 및 카드 가로폭 고정으로 레이아웃 안정화, Resume Overview를 표 형태로 재구성하고 프로젝트 타이틀 줄바꿈 처리로 가독성 개선
-20260113: Portfolio Detail 정적 컨텐츠 구조(TS 기반) 도입, Home/Portfolio/Detail 단일 데이터 소스 통합, 문서형 UI(텍스트·불릿·Case·태그·2열 이미지)로 포트폴리오 페이지 완성
-20260116: Portfolio 프로젝트 상세 컨텐츠 전면 정리, Home → Portfolio Detail 네비게이션 연결 및 상세 페이지 문서형 UI 완성도 개선
+위 내용은 PROJECT_CONTEXT.txt 문서에서 단일 기준으로 관리한다.
 
+==================================================
 
-아래 """~~~""" 안에 작성된 내용은 dev_log 템플릿이야.
-내가 "오늘 작업 로그 남기자" 같은 작업 로그 남기는 내용과 관련된 말을 하면, 우리가 작업한 내용을 아래 템플릿에 맞춰서 작성해야해.
+1. Project Purpose
+
+이 프로젝트는 개인 프로젝트로서 다음 목적을 가진다.
+- 개인 개발 이력과 사고 과정을 기록한다.
+- Blog / Dev Log / Portfolio를 하나의 웹 서비스로 통합한다.
+- 실제 클라우드 환경에서 서비스 배포 및 운영 경험을 축적한다.
+- 과도한 엔터프라이즈 설계 없이 현실적인 개인 서비스 구조를 실험한다.
+
+==================================================
+
+2. Project Scope
+
+[In Scope]
+- Blog 및 Dev Log 콘텐츠 관리
+- Portfolio 정적 콘텐츠 제공
+- 개인 관리자(Admin)를 통한 콘텐츠 작성 및 수정
+- 클라우드 환경에서의 실제 운영
+
+[Out of Scope]
+- 다중 사용자 시스템
+- 외부 사용자 인증 및 권한 관리
+- 고가용성 및 대규모 트래픽 대응
+- 엔터프라이즈 수준의 보안/컴플라이언스
+- 개인 프로젝트 규모를 벗어나는 요구는 설계 대상이 아니다.
+
+==================================================
+
+3. Architecture Principles
+
+3.1 Single Server Principle
+
+- Frontend와 Backend는 하나의 서버에서 통합 운영한다.
+- 서버를 분리하여 발생하는 복잡도는 이 프로젝트의 목표에 부합하지 않는다.
+
+3.2 Simplicity First
+
+- 가능한 한 단순한 구조를 유지한다.
+- “나중에 필요할지도 모른다”는 이유로 복잡도를 추가하지 않는다.
+- 리스트성 데이터 조회는 초기 로딩 성능을 우선하며,
+  필요한 범위만 점진적으로 로딩하는 구조(cursor / load-more 등)를 기본 원칙으로 한다.
+
+3.3 Code Over Tool
+
+- 특정 도구나 플랫폼에 종속된 구조를 지양한다.
+- 도구는 언제든 교체 가능해야 한다.
+
+==================================================
+
+4. Technology Selection Policy
+
+기술 선택 시 다음 기준을 따른다.
+- 개인이 장기간 유지보수 가능한가
+- 실제 운영 환경에서 검증 가능한가
+- 설정 및 러닝커브가 과도하지 않은가
+- 문제 발생 시 원인 파악이 가능한가
+
+위 기준에 부합하지 않는 기술은 도입하지 않는다.
+
+==================================================
+
+5. Hosting & Infrastructure Policy
+
+5.1 Hosting Platform
+
+- Railway를 기본 운영 플랫폼으로 사용한다.
+
+선택 이유:
+- 배포 및 운영의 단순성
+- 서버 슬립 없음
+- 데이터베이스 유지 관리 편의성
+
+5.2 Cloud Provider Policy
+
+- 개인 프로젝트에서 직접 보안, 네트워크, SSL 등을 구성하는 것은 과도하다고 판단한다.
+- AWS, GCP와 같은 IaaS는 학습 목적이 아닌 이상 선택하지 않는다.
+
+==================================================
+
+6. Admin & Security Policy
+
+- Admin 기능은 개인 전용이다.
+- 외부 사용자 또는 다중 관리자 시나리오는 고려하지 않는다.
+- 보안은 “충분한 수준”을 목표로 하며, 완벽함을 추구하지 않는다.
+관리 비용이 급증하는 설계는 지양한다.
+
+==================================================
+
+7. Documentation Policy
+
+7.1 Document Roles
+
+각 문서는 명확한 역할을 가진다.
+
+- Project Guideline:
+  프로젝트의 목적, 원칙, 판단 기준을 정의한다.
+  
+- PROJECT_CONTEXT.txt:
+  현재 코드 구조, 런타임 규칙, 운영 상태에 대한 사실(Facts)을 기록한다.
+  
+- Dev Log:
+  모든 작업의 기록과 변경 이력을 남긴다.
+
+문서의 역할을 혼합하지 않는다.
+
+7.2 Mandatory Reference Rule (중요)
+PROJECT_CONTEXT.txt의 공식 최신 버전은 GitHub 저장소에 커밋된 파일을 기준으로 한다.
+
+GitHub URL:
+https://github.com/jungho-personal/kjh-web-prj/PROJECT_CONTEXT.txt
+
+판단 기준은 항상 GitHub에 커밋된 최신 버전을 따른다.
+
+프로젝트와 관련된 모든 작업은 다음 규칙을 반드시 따른다.
+
+- 분석, 설계, 답변, 코드 작성, 리팩토링, 디버깅을 수행할 때
+  항상 PROJECT_CONTEXT.txt를 최우선 기준으로 참고한다.
+
+- PROJECT_CONTEXT.txt와 충돌하는 가정이나 설명은 허용하지 않는다.
+
+- PROJECT_CONTEXT.txt에 명시되지 않은 내용에 대해 판단이 필요한 경우:
+  1. PROJECT_CONTEXT.txt를 먼저 업데이트한다.
+  2. 그 이후 작업을 진행한다.
+
+이 규칙은 예외 없이 적용한다.
+
+7.3 Update Rules
+
+- Project Guideline:
+  프로젝트의 목적, 원칙, 판단 기준이 변경될 때만 수정한다.
+
+- PROJECT_CONTEXT.txt:
+  코드 구조, 런타임 규칙, 운영 사실이 변경되면 즉시 수정한다.
+
+- Dev Log:
+  모든 작업에 대해 반드시 작성한다.
+
+==================================================
+
+8. Change Management Rule
+
+다음 변경이 발생하면 반드시 기록한다.
+- 구조적 의사결정 변경
+- 운영 방식 변경
+- 기존 원칙을 깨는 예외 도입
+
+기록 순서는 다음과 같다.
+1. Dev Log
+2. PROJECT_CONTEXT.txt (필요 시)
+3. Project Guideline (원칙 변경 시)
+
+==================================================
+
+9. Guideline Update Rule
+
+이 문서는 다음 경우에만 수정한다.
+
+- 프로젝트 목적이 변경될 때
+- 아키텍처 원칙이 변경될 때
+- 기술 선택 기준이 변경될 때
+
+단순 구현 변경으로는 수정하지 않는다.
+
+==================================================
+
+10. Final Principle
+
+이 프로젝트의 모든 설계 결정은 다음 질문을 기준으로 한다.
+
+“지금의 나 혼자, 장기간 유지할 수 있는가?”
+
+이 질문에 YES가 아니라면, 해당 선택은 하지 않는다.
+
+==================================================
+
+11. Make DevLog
+
+사용자가 "작업 마무리하자"는 말 혹은, "작업 로그 남기자" 와 같은 작업 로그 남기는 내용과
+관련된 말을 하면, 작업한 내용을 아래 템플릿에 맞춰 바로 복붙가능하게 txt 로 작성해야 한다.
 """
 # 🛠️ Dev Log – YYYY.MM.DD
 
@@ -118,3 +259,6 @@ https://github.com/jungho-personal/kjh-web-prj
 ## 📂 Category
 - Development Log
 """
+==================================================
+
+End of PROJECT_GUIDELINE.txt
