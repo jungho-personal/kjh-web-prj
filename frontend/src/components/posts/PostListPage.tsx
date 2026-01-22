@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { PaginationWindow } from "@/components/common/PaginationWindow";
 import { listPosts } from "@/api/client";
 import type { PostBase } from "@/api/types";
 import { Content } from "@/components/layout/Content";
@@ -17,7 +18,8 @@ type Props = {
   dateFormat?: (iso: string) => string;
 };
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 5;     // ✅ 한 페이지당 글 5개
+const PAGE_WINDOW = 5;   // ✅ 페이지 버튼 1~5 / 6~10 ... 윈도우 크기
 
 function LoadingOverlay({ show }: { show: boolean }) {
   if (!show) return null;
@@ -41,15 +43,13 @@ export default function PostListPage({
   const [items, setItems] = useState<PostBase[]>([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
-   const { slug } = useParams<{ slug: string }>();
-  // ✅ slug 바뀔 때(= 다른 글로 이동) 자연스럽게 상단으로 이동
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [slug]);
 
-  // cursor pagination
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [hasMore, setHasMore] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pageFromQuery = Number(searchParams.get("page") ?? "1");
+  const page = Number.isFinite(pageFromQuery) && pageFromQuery > 0 ? pageFromQuery : 1;
+
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     let alive = true;
@@ -59,12 +59,16 @@ export default function PostListPage({
         setLoading(true);
         setErr(null);
 
-        const res = await listPosts({ category, limit: PAGE_SIZE });
+        // ✅ API에는 "page_size = 글 개수"로 전달해야 함
+        const res = await listPosts({ category, page, page_size: PAGE_SIZE });
         if (!alive) return;
 
         setItems(res.items);
-        setCursor(res.next_cursor ?? null);
-        setHasMore(!!res.next_cursor);
+        setTotal(res.total ?? 0);
+        setTotalPages(res.total_pages ?? 1);
+
+        // ✅ page 이동 시 자연스럽게 상단으로 이동
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
       } catch (e: any) {
         if (!alive) return;
         setErr(e?.message ?? "Failed to load");
@@ -77,7 +81,7 @@ export default function PostListPage({
     return () => {
       alive = false;
     };
-  }, [category]);
+  }, [category, page]);
 
   const emptyText = useMemo(() => {
     if (category === "blog") return "아직 블로그 글이 없어요.";
@@ -98,36 +102,14 @@ export default function PostListPage({
   const renderDate = (iso: string) =>
     dateFormat ? dateFormat(iso) : new Date(iso).toLocaleDateString();
 
-  const loadMore = async () => {
-    if (!cursor || loading) return;
-
-    try {
-      setLoading(true);
-
-      const res = await listPosts({
-        category,
-        limit: PAGE_SIZE,
-        cursor,
-      });
-
-      setItems((prev) => [...prev, ...res.items]);
-      setCursor(res.next_cursor ?? null);
-      setHasMore(!!res.next_cursor);
-    } catch (e: any) {
-      // “더보기” 실패는 페이지 전체를 깨지 않도록 토스트/로그 정도로만 처리
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   if (err) return <div className="text-destructive">Error: {err}</div>;
 
   return (
-    <Content variant="wide">
+    <Content variant="wide" className="h-full flex flex-col overflow-hidden">
       <LoadingOverlay show={loading && items.length === 0} />
 
-      <div className="mb-8 space-y-6">
+      {/* ✅ 본문 영역: 남는 공간을 차지 */}
+      <div className="mb-0 space-y-6 overflow-hidden" style={{ height: "calc(100% - 104px)" }}>
         <PageHeader title={title} description={description} />
 
         {!loading && sorted.length === 0 ? (
@@ -147,9 +129,7 @@ export default function PostListPage({
                 >
                   <div className="flex items-start justify-between gap-6">
                     <div className="min-w-0 space-y-2">
-                      <h2 className="text-lg font-semibold leading-snug">
-                        {p.title}
-                      </h2>
+                      <h2 className="text-lg font-semibold leading-snug">{p.title}</h2>
 
                       {p.summary ? (
                         <p className="text-sm text-muted-foreground line-clamp-2">
@@ -175,21 +155,28 @@ export default function PostListPage({
                 </Link>
               ))}
             </div>
-
-            {hasMore ? (
-              <div className="flex justify-center pt-2">
-                <button
-                  type="button"
-                  onClick={loadMore}
-                  className="rounded-md border px-4 py-2 text-sm hover:bg-accent disabled:opacity-50"
-                  disabled={loading}
-                >
-                  {loading ? "Loading..." : "더보기"}
-                </button>
-              </div>
-            ) : null}
           </div>
         ) : null}
+      </div>
+
+      {/* ✅ pagination footer: 높이 고정 (본문 calc와 맞춰야 함) */}
+      <div className="shrink-0 h-[104px] flex flex-col items-center justify-center">
+        <PaginationWindow
+          page={page}
+          totalPages={totalPages}
+          windowSize={PAGE_WINDOW}
+          onChange={(p: number) => {
+            // ✅ setSp가 아니라 setSearchParams 사용
+            setSearchParams((prev) => {
+              const sp = new URLSearchParams(prev);
+              sp.set("page", String(p));
+              return sp;
+            });
+          }}
+        />
+        <div className="pt-2 text-center text-xs text-muted-foreground">
+          Total {total} • Page {page} / {totalPages}
+        </div>
       </div>
     </Content>
   );

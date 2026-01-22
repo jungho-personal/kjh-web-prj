@@ -114,7 +114,8 @@ export default function PostDetailPage({ backTo, backLabel, expectedCategory }: 
 
         const res = await listPosts({
           category: post.category,
-          limit: 200, // Prev/Next 계산용으로 충분하게
+          page: 1,
+		  page_size:200, // Prev/Next 계산용으로 좀 넉넉하게
         });
 
          // ✅ 최신순(desc) 정렬

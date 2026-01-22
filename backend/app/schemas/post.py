@@ -30,9 +30,14 @@ class PostDetail(PostBase):
     toc: List[TocItem] = Field(default_factory=list)
 
 
+# app/schemas/post.py
 class PostListResponse(BaseModel):
     items: List[PostBase]
-    next_cursor: Optional[str] = None
+    page: int
+    page_size: int
+    total: int
+    total_pages: int
+
 
 
 class PostCreateRequest(BaseModel):

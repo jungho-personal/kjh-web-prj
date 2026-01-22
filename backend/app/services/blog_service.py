@@ -3,9 +3,9 @@ from __future__ import annotations
 import base64
 import json
 from datetime import datetime
-from typing import Optional, Tuple, List
+from typing import Optional, Tuple, List, Dict, Any
 
-from sqlalchemy import select, desc
+from sqlalchemy import select, desc, func
 from sqlalchemy.orm import Session
 
 from app.models.post import Post
@@ -27,34 +27,89 @@ def _decode_cursor(cursor: Optional[str]) -> int:
         return 0
 
 
-def list_posts(
+# def list_posts(
+#     db: Session,
+#     category: Optional[str],
+#     limit: int,
+#     cursor: Optional[str],
+# ) -> Tuple[List[Post], Optional[str]]:
+#     offset = _decode_cursor(cursor)
+
+#     stmt = select(
+#         Post.id,
+#         Post.slug,
+#         Post.title,
+#         Post.summary,
+#         Post.category,
+#         Post.tags,
+#         Post.published,
+#         Post.created_at,
+#         Post.updated_at,
+#     ).where(Post.published.is_(True))
+    
+#     if category:
+#         stmt = stmt.where(Post.category == category)
+
+#     stmt = stmt.order_by(desc(Post.created_at)).offset(offset).limit(limit + 1)
+#     rows = db.execute(stmt).all()
+
+#     has_next = len(rows) > limit
+#     sliced = rows[:limit]
+#     items = [
+#         {
+#             "id": str(r.id),
+#             "slug": r.slug,
+#             "title": r.title,
+#             "summary": r.summary,
+#             "category": r.category,
+#             "tags": r.tags,
+#             "published": r.published,
+#             "created_at": r.created_at,
+#             "updated_at": r.updated_at,
+#         }
+#         for r in sliced
+#     ]
+#     next_cursor = _encode_cursor(offset + limit) if has_next else None
+#     return items, next_cursor
+
+def list_posts_page(
     db: Session,
     category: Optional[str],
-    limit: int,
-    cursor: Optional[str],
-) -> Tuple[List[Post], Optional[str]]:
-    offset = _decode_cursor(cursor)
+    page: int,
+    page_size: int,
+) -> Tuple[List[Dict[str, Any]], int]:
+    # filters (published + optional category)
+    base = select(Post).where(Post.published.is_(True))
+    if category:
+        base = base.where(Post.category == category)
 
-    stmt = select(
-        Post.id,
-        Post.slug,
-        Post.title,
-        Post.summary,
-        Post.category,
-        Post.tags,
-        Post.published,
-        Post.created_at,
-        Post.updated_at,
-    ).where(Post.published.is_(True))
-    
+    # total count
+    count_stmt = select(func.count()).select_from(base.subquery())
+    total = int(db.execute(count_stmt).scalar() or 0)
+
+    # items
+    offset = (page - 1) * page_size
+
+    stmt = (
+        select(
+            Post.id,
+            Post.slug,
+            Post.title,
+            Post.summary,
+            Post.category,
+            Post.tags,
+            Post.published,
+            Post.created_at,
+            Post.updated_at,
+        )
+        .where(Post.published.is_(True))
+    )
     if category:
         stmt = stmt.where(Post.category == category)
 
-    stmt = stmt.order_by(desc(Post.created_at)).offset(offset).limit(limit + 1)
+    stmt = stmt.order_by(desc(Post.created_at)).offset(offset).limit(page_size)
     rows = db.execute(stmt).all()
 
-    has_next = len(rows) > limit
-    sliced = rows[:limit]
     items = [
         {
             "id": str(r.id),
@@ -67,11 +122,10 @@ def list_posts(
             "created_at": r.created_at,
             "updated_at": r.updated_at,
         }
-        for r in sliced
+        for r in rows
     ]
-    next_cursor = _encode_cursor(offset + limit) if has_next else None
-    return items, next_cursor
 
+    return items, total
 
 def get_post_by_slug(db: Session, slug: str) -> Optional[Post]:
     stmt = select(Post).where(Post.slug == slug)

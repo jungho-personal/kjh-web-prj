@@ -1,27 +1,35 @@
 from __future__ import annotations
 
+from math import ceil
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import Optional
 
 from app.db.session import get_db
 from app.schemas.post import PostListResponse, PostDetail
-from app.services.blog_service import list_posts, get_post_by_slug
+from app.services.blog_service import list_posts_page, get_post_by_slug
 
 router = APIRouter(prefix="/posts", tags=["posts"])
+
 
 
 @router.get("", response_model=PostListResponse)
 def api_list_posts(
     category: Optional[str] = Query(default=None),
-    limit: int = Query(default=10, ge=1, le=200),
-    cursor: Optional[str] = Query(default=None),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=5, ge=1, le=50),
     db: Session = Depends(get_db),
 ):
-    items, next_cursor = list_posts(db, category, limit, cursor)
+    items, total = list_posts_page(db, category, page, page_size)
+    total_pages = max(1, int(ceil(total / page_size))) if total > 0 else 1
 
-    return {"items": items, "next_cursor": next_cursor}
-
+    return {
+        "items": items,
+        "page": page,
+        "page_size": page_size,
+        "total": total,
+        "total_pages": total_pages,
+    }
 
 @router.get("/{slug}", response_model=PostDetail)
 def api_get_post(slug: str, db: Session = Depends(get_db)):

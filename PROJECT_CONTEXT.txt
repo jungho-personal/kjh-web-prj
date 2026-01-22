@@ -100,6 +100,7 @@ kjh-web-prj/
  │   │   ├─ components/
  │   │   │   ├─ common/
  │   │   │   │   ├─ ImageModal.tsx
+ │   │   │   │   ├─ PaginationWindow.tsx
  │   │   │   │   └─ PaginationNumbers.tsx
  │   │   │   │
  │   │   │   ├─ home/
@@ -337,5 +338,21 @@ Notes:
 - Portfolio List 페이지는 카드(Grid) 기반 UI를 제거하고,
   Blog / DevLog와 동일한 리스트(divide-y) 구조로 통일했다.
 
+[2026.01] List Pagination Structure Update
+
+- Blog / DevLog / Portfolio List 페이지의 데이터 로딩 방식을
+  cursor 기반 load-more 방식에서 page/page_size 기반 페이지네이션 구조로 변경함.
+
+- List 페이지는 페이지네이션(page, total, total_pages)을 전담하고,
+  Detail 페이지는 previous / next 네비게이션만 유지하도록
+  List / Detail 간 책임을 명확히 분리함.
+
+- 페이지네이션 UI는 기존 PaginationNumbers 컴포넌트와 별도로,
+  페이지 그룹(1~5, 6~10) 이동을 지원하는 PaginationWindow 컴포넌트를 신규 도입함.
+
+- 관련 프론트엔드 구조 변경:
+  - src/components/common/PaginationWindow.tsx (신규)
+  - List 페이지(PostListPage)에서 cursor / loadMore 로직 제거
+  - URL query(page) 기반 페이지 이동 방식 채택
 
 End of PROJECT_CONTEXT.txt

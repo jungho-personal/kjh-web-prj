@@ -18,11 +18,11 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   return (await res.json()) as T;
 }
 
-export function listPosts(params?: { category?: string; limit?: number; cursor?: string }) {
+export function listPosts(params?: { category?: string; page?: number; page_size?: number }) {
   const q = new URLSearchParams();
   if (params?.category) q.set("category", params.category);
-  if (params?.limit) q.set("limit", String(params.limit));
-  if (params?.cursor) q.set("cursor", params.cursor);
+  if (params?.page) q.set("page", String(params.page));
+  if (params?.page_size) q.set("page_size", String(params.page_size));
 
   const qs = q.toString();
   return request<PostListResponse>(`/api/posts${qs ? `?${qs}` : ""}`);

@@ -25,7 +25,10 @@ export type PostDetail = PostBase & {
 
 export type PostListResponse = {
   items: PostBase[];
-  next_cursor?: string | null;
+  page: number;
+  page_size: number;
+  total: number;
+  total_pages: number;
 };
 
 export type ChatRequest = {
