@@ -134,11 +134,13 @@ export const portfolioDetails: PortfolioDetail[] = [
           {
             kind: "arch",
             // filename: "volvo-crm-dw-ops__dw__arch.png",
+            filename: "tmp.png",
             caption: "DW 통합 고객 DB 구성도",
           },
           {
             kind: "shot",
             // filename: "volvo-crm-dw-ops__dw__arch_mainpage.png",
+            filename: "tmp.png",
             caption: "VCK CRM-DW 대시보드",
           },
         ],
@@ -306,31 +308,37 @@ export const portfolioDetails: PortfolioDetail[] = [
           {
             kind: "shot",
             // filename: "renault-crm-dw-build-ops__dw__shot1.png",
+            filename: "tmp.png",
             caption: "CRM DW 구축 범위 및 데이터 흐름",
           },
           {
             kind: "shot",
             // filename: "renault-crm-dw-build-ops__dw__shot2.png",
+            filename: "tmp.png",
             caption: "CRM DW 구축 ERD",
           },
           {
             kind: "shot",
             // filename: "renault-crm-dw-build-ops__dw__shot5.png",
+            filename: "tmp.png",
             caption: "고객사 데이터 프로파일링(1)",
           },
           {
             kind: "shot",
             // filename: "renault-crm-dw-build-ops__dw__shot6.png",
+            filename: "tmp.png",
             caption: "고객사 데이터 프로파일링(2)",
           },
           {
             kind: "shot",
             // filename: "renault-crm-dw-build-ops__dw__shot3.png",
+            filename: "tmp.png",
             caption: "컨설팅사와 커뮤니케이션(1)",
           },
           {
             kind: "shot",
             // filename: "renault-crm-dw-build-ops__dw__shot4.png",
+            filename: "tmp.png",
             caption: "컨설팅사와 커뮤니케이션(2)",
           },
         ],
@@ -478,16 +486,19 @@ export const portfolioDetails: PortfolioDetail[] = [
           {
             kind: "shot",
             // filename: "lg-td-cdp-ops__saas__shot2.png",
+            filename: "tmp.png",
             caption: "세그먼트/대시보드 운영 사례(대시보드)",
           },
           {
             kind: "shot",
             // filename: "lg-td-cdp-ops__saas__shot3.png",
+            filename: "tmp.png",
             caption: "세그먼트/대시보드 운영 사례(세그먼트)",
           },
           {
             kind: "shot",
             // filename: "lg-td-cdp-ops__saas__shot1.png",
+            filename: "tmp.png",
             caption: "CDP 관리 테이블 중 일부 ERD",
           },
         ],
@@ -646,21 +657,25 @@ export const portfolioDetails: PortfolioDetail[] = [
           {
             kind: "shot",
             // filename: "volvo-crm-dw-msg-consent-dashboard__dw__shot1.png",
+            filename: "tmp.png",
             caption: "개인정보동의 대시보드",
           },
           {
             kind: "shot",
             // filename: "volvo-crm-dw-msg-consent-dashboard__dw__shot2.png",
+            filename: "tmp.png",
             caption: "문자 발송/내역 확인 화면",
           },
           {
             kind: "shot",
             // filename: "volvo-crm-dw-msg-consent-dashboard__dw__shot3.png",
+            filename: "tmp.png",
             caption: "수신거부 API Process",
           },
           {
             kind: "shot",
             // filename: "volvo-crm-dw-msg-consent-dashboard__dw__shot4.png",
+            filename: "tmp.png",
             caption: "Active/Inactive Process",
           },
         ],

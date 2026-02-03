@@ -40,7 +40,7 @@ export default function Sidebar() {
           {/* ✅ SNS icons (center aligned) */}
           <div className="flex items-center justify-center gap-4">
             <a
-              href={links.github}
+            //   href={links.github}
               target="_blank"
               rel="noreferrer"
               className="text-muted-foreground hover:text-primary"
