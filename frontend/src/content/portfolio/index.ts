@@ -5,13 +5,13 @@ export const portfolioDetails: PortfolioDetail[] = [
   // Volvo CRM_DW 운영 & 유지보수
   {
     slug: "volvo-crm-dw-ops",
-    title: "Volvo Car Korea – CRM DW 운영 & 유지보수",
+    title: "VCK – CRM DW 운영 & 유지보수",
     tab: "DW",
     period: "2023.08 ~ 2025.12",
     roles: ["DW Engineer"],
     subtitle: "CRM DW 운영 안정화 및 데이터 품질 관리",
     summary:
-      "Volvo Car Korea의 CRM 데이터를 기반으로 마케팅·영업 분석을 지원하는 DW 시스템을 운영하며, 배치 안정성·데이터 정합성·장애 대응을 중심으로 실무 전반을 담당했습니다.",
+      "VCK의 CRM 데이터를 기반으로 마케팅·영업 분석을 지원하는 DW 시스템을 운영하며, 배치 안정성·데이터 정합성·장애 대응을 중심으로 실무 전반을 담당했습니다.",
     techStack: [
     //   "Oracle",
       "SQL Server",
@@ -28,7 +28,7 @@ export const portfolioDetails: PortfolioDetail[] = [
         title: "Project Snapshot",
         items: [
           { label: "기간", value: "2023.08 ~ 2025.12" },
-          { label: "고객사", value: "Volvo Car Korea" },
+          { label: "고객사", value: "VCK" },
           { label: "프로젝트 성격", value: "CRM Data Warehouse 운영 및 유지보수" },
           { label: "팀 구성", value: "2명 (특급 1 / 중급 1)" },
           { label: "내 역할", value: "중급 DW 엔지니어, 운영 실무 전담" }
@@ -46,7 +46,7 @@ export const portfolioDetails: PortfolioDetail[] = [
         type: "text",
         title: "Context",
         body: [
-          "본 프로젝트는 Volvo Car Korea의 CRM 데이터를 기반으로 마케팅·영업 성과 분석을 지원하는 운영 중심의 DW 시스템입니다.",
+          "본 프로젝트는 VCK의 CRM 데이터를 기반으로 마케팅·영업 성과 분석을 지원하는 운영 중심의 DW 시스템입니다.",
           "DW는 단순 적재를 넘어 실제 비즈니스 의사결정에 직접 활용되는 데이터 플랫폼으로 운영되었습니다."
         ],
         bulletsTitle: "주요 활용",
@@ -133,12 +133,12 @@ export const portfolioDetails: PortfolioDetail[] = [
         items: [
           {
             kind: "arch",
-            filename: "volvo-crm-dw-ops__dw__arch.png",
+            // filename: "volvo-crm-dw-ops__dw__arch.png",
             caption: "DW 통합 고객 DB 구성도",
           },
           {
             kind: "shot",
-            filename: "volvo-crm-dw-ops__dw__arch_mainpage.png",
+            // filename: "volvo-crm-dw-ops__dw__arch_mainpage.png",
             caption: "VCK CRM-DW 대시보드",
           },
         ],
@@ -169,7 +169,7 @@ export const portfolioDetails: PortfolioDetail[] = [
   // slug: renault-crm-dw-build-ops
   {
     slug: "renault-crm-dw-build-ops",
-    title: "Renault – CRM DW 구축 & 운영 & 유지보수",
+    title: "RK – CRM DW 구축 & 운영 & 유지보수",
     tab: "DW",
     period: "2025.02 ~ 2025.12",
     roles: ["DW Engineer"],
@@ -188,7 +188,7 @@ export const portfolioDetails: PortfolioDetail[] = [
         title: "Project Snapshot",
         items: [
           { label: "기간", value: "2025.02 ~ 2025.12 (개발종료: 08월, 운영종료: 12월)"},
-          { label: "고객사", value: "Renault Korea" },
+          { label: "고객사", value: "RK" },
           {
             label: "프로젝트 성격",
             value: "CRM DW 구축 + 운영/유지보수",
@@ -305,32 +305,32 @@ export const portfolioDetails: PortfolioDetail[] = [
         items: [
           {
             kind: "shot",
-            filename: "renault-crm-dw-build-ops__dw__shot1.png",
+            // filename: "renault-crm-dw-build-ops__dw__shot1.png",
             caption: "CRM DW 구축 범위 및 데이터 흐름",
           },
           {
             kind: "shot",
-            filename: "renault-crm-dw-build-ops__dw__shot2.png",
+            // filename: "renault-crm-dw-build-ops__dw__shot2.png",
             caption: "CRM DW 구축 ERD",
           },
           {
             kind: "shot",
-            filename: "renault-crm-dw-build-ops__dw__shot5.png",
+            // filename: "renault-crm-dw-build-ops__dw__shot5.png",
             caption: "고객사 데이터 프로파일링(1)",
           },
           {
             kind: "shot",
-            filename: "renault-crm-dw-build-ops__dw__shot6.png",
+            // filename: "renault-crm-dw-build-ops__dw__shot6.png",
             caption: "고객사 데이터 프로파일링(2)",
           },
           {
             kind: "shot",
-            filename: "renault-crm-dw-build-ops__dw__shot3.png",
+            // filename: "renault-crm-dw-build-ops__dw__shot3.png",
             caption: "컨설팅사와 커뮤니케이션(1)",
           },
           {
             kind: "shot",
-            filename: "renault-crm-dw-build-ops__dw__shot4.png",
+            // filename: "renault-crm-dw-build-ops__dw__shot4.png",
             caption: "컨설팅사와 커뮤니케이션(2)",
           },
         ],
@@ -371,7 +371,7 @@ export const portfolioDetails: PortfolioDetail[] = [
     roles: ["CDP Operator", "Data Engineer"],
     subtitle: "고객 데이터 통합 기반 개인화 마케팅/인사이트 운영 지원",
     summary:
-      "LG전자 한국영업본부 마케팅 조직을 대상으로 Treasure Data CDP(Customer Data Platform)를 운영·유지보수했습니다.\n다양한 원천(오프라인/온라인/콜센터/렌탈 등)의 고객 데이터를 고객 중심으로 통합한 서비스에서 데이터 분석이 가능하도록 ETL 배치 점검, 대시보드/추출 요청 대응, 세그먼트 샘플 제작 등을 담당했습니다.",
+      "L사 마케팅 조직을 대상으로 Treasure Data CDP(Customer Data Platform)를 운영·유지보수했습니다.\n다양한 원천(오프라인/온라인/콜센터/렌탈 등)의 고객 데이터를 고객 중심으로 통합한 서비스에서 데이터 분석이 가능하도록 ETL 배치 점검, 대시보드/추출 요청 대응, 세그먼트 샘플 제작 등을 담당했습니다.",
     techStack: ["Treasure Data CDP"],
     heroImage: "lg-td-cdp-ops__saas__hero.png",
 
@@ -381,7 +381,7 @@ export const portfolioDetails: PortfolioDetail[] = [
         title: "Project Snapshot",
         items: [
           { label: "기간", value: "2022.11 ~ 2023.05" },
-          { label: "고객사", value: "LG전자 한국영업본부" },
+          { label: "고객사", value: "L사" },
           { label: "사용 조직", value: "마케팅 팀 / Data Insight 팀" },
           { label: "프로젝트 성격", value: "Treasure Data CDP 운영 및 유지보수" },
           { label: "팀 구성", value: "3명 (팀장 1 / 팀원 2)" },
@@ -404,7 +404,7 @@ export const portfolioDetails: PortfolioDetail[] = [
         type: "text",
         title: "Context",
         body: [
-          "본 프로젝트는 LG전자 한국영업본부의 마케팅 및 데이터 인사이트 팀 업무를 지원하기 위해 Treasure Data CDP를 운영·유지보수하는 업무입니다.",
+          "본 프로젝트는 L사의 마케팅 및 데이터 인사이트 팀 업무를 지원하기 위해 Treasure Data CDP를 운영·유지보수하는 업무입니다.",
           "여러 원천(오프라인 매장, 온라인 웹/앱, 콜센터, 렌탈 서비스 등)에 흩어진 고객 데이터를 고객 중심으로 통합하여, 고객 행동 이력 기반의 분석과 개인화 마케팅 실행이 가능하도록 플랫폼을 안정적으로 운영하는 것이 핵심 목적이었습니다.",
         ],
         bulletsTitle: "주요 활용",
@@ -477,17 +477,17 @@ export const portfolioDetails: PortfolioDetail[] = [
         items: [
           {
             kind: "shot",
-            filename: "lg-td-cdp-ops__saas__shot2.png",
+            // filename: "lg-td-cdp-ops__saas__shot2.png",
             caption: "세그먼트/대시보드 운영 사례(대시보드)",
           },
           {
             kind: "shot",
-            filename: "lg-td-cdp-ops__saas__shot3.png",
+            // filename: "lg-td-cdp-ops__saas__shot3.png",
             caption: "세그먼트/대시보드 운영 사례(세그먼트)",
           },
           {
             kind: "shot",
-            filename: "lg-td-cdp-ops__saas__shot1.png",
+            // filename: "lg-td-cdp-ops__saas__shot1.png",
             caption: "CDP 관리 테이블 중 일부 ERD",
           },
         ],
@@ -522,7 +522,7 @@ export const portfolioDetails: PortfolioDetail[] = [
   // shot2: volvo-crm-dw-msg-consent-dashboard__dw__shot2.png
   {
     slug: "volvo-crm-dw-msg-consent-dashboard",
-    title: "Volvo Car Korea – 문자발송시스템 & 개인정보동의 대시보드",
+    title: "VCK – 문자발송시스템 & 개인정보동의 대시보드",
     tab: "DW",
     period: "2024.02 ~ 2024.10",
     roles: ["DW Engineer", "Backend Engineer"],
@@ -537,7 +537,7 @@ export const portfolioDetails: PortfolioDetail[] = [
         title: "Project Snapshot",
         items: [
           { label: "기간", value: "2024.02 ~ 2024.10 (초기: 2024.02 ~ 2024.05)" },
-          { label: "고객사", value: "Volvo Car Korea" },
+          { label: "고객사", value: "VCK" },
           {
             label: "프로젝트 성격",
             value: "CRM DW 연계 메시징 기능 개발 + 개인정보동의 대시보드/Mart 구축",
@@ -568,7 +568,7 @@ export const portfolioDetails: PortfolioDetail[] = [
         ],
         bulletsTitle: "Architecture Flow",
         bullets: [
-          "Data Source(Sales DMS / Service DMS / Consent DMS / RCXP(Salesforce)) → ETL → 통합 고객 DB(Staging → DW → CRM Data Mart)",
+          "Data Source(Sales DMS / Service DMS / Consent DMS / Salesforce) → ETL → 통합 고객 DB(Staging → DW → CRM Data Mart)",
           "CRM Data Mart(동의/고객/활동 기반) → Marketing Analytics System(분석/활용)",
           "CRM Data Mart → MSG Agent(발송/자동화) → 문자 발송(Marketing SMS/Service, CRM Automation System)",
           "문자 발송 업체 수신거부 목록(API) → MSG Reject 적재/반영 → 발송 대상/정합성 제어",
@@ -645,22 +645,22 @@ export const portfolioDetails: PortfolioDetail[] = [
         items: [
           {
             kind: "shot",
-            filename: "volvo-crm-dw-msg-consent-dashboard__dw__shot1.png",
+            // filename: "volvo-crm-dw-msg-consent-dashboard__dw__shot1.png",
             caption: "개인정보동의 대시보드",
           },
           {
             kind: "shot",
-            filename: "volvo-crm-dw-msg-consent-dashboard__dw__shot2.png",
+            // filename: "volvo-crm-dw-msg-consent-dashboard__dw__shot2.png",
             caption: "문자 발송/내역 확인 화면",
           },
           {
             kind: "shot",
-            filename: "volvo-crm-dw-msg-consent-dashboard__dw__shot3.png",
+            // filename: "volvo-crm-dw-msg-consent-dashboard__dw__shot3.png",
             caption: "수신거부 API Process",
           },
           {
             kind: "shot",
-            filename: "volvo-crm-dw-msg-consent-dashboard__dw__shot4.png",
+            // filename: "volvo-crm-dw-msg-consent-dashboard__dw__shot4.png",
             caption: "Active/Inactive Process",
           },
         ],
