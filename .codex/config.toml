@@ -1,0 +1,23 @@
+# .codex/config.toml
+# Repository-level config for POC: Python local UI random picker.
+
+[agent]
+# Always force plan first and show diff for changes.
+plan_first = true
+show_diff = true
+
+[permissions]
+# Allow file creation and modification (code + docs)
+allow_write = true
+
+# Prevent arbitrary shell execution
+allow_shell = false
+
+# Explicitly allow minimal verification command if needed
+# (We keep shell disabled by default; to enable specific commands later,
+# uncomment and add below commands into allowed_commands.)
+# allowed_commands = [
+#   "python -m pip install",
+#   "python -c",
+#   "python main.py"
+# ]
